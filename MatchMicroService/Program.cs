@@ -23,7 +23,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Expreso de las diez - Microservicio de Match", Version = "v1" });
-
+   
     //Boton Autorize (Swagger)
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -63,31 +63,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     };
 });
 
-
-
-//Custom
-var connectionString = "";
-Console.WriteLine(Directory.GetCurrentDirectory());
-var gab = "C:\\Users\\Gabo\\Documents\\Backup\\unaj\\ProyectoDeSoftware_1\\2023-Primer-cuatri\\Grupal\\AppDeCitas\\UserMicroService2\\Template2\\Template2";
-var fran = @"C:\Users\LopezFranco\Desktop\Proyecto Sofware 2023\ExpressoDelasDiez\UserMicroService2\Template2\Template2";
-
-if (Directory.GetCurrentDirectory() == gab)
-{
-    connectionString =
-        builder.Configuration["ConnectionString2"];
-}
-if (Directory.GetCurrentDirectory() == fran)
-{
-    connectionString =
-        builder.Configuration["DefaultConnection"];
-}
-else
-{
-    // MSSQL running locally
-    connectionString = builder.Configuration["ConnectionString"];
-}
+string connectionString = builder.Configuration["ConnectionString"];
 
 Console.WriteLine(connectionString);
+
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
 
