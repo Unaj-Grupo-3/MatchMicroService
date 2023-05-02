@@ -67,7 +67,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 string connectionString = builder.Configuration["ConnectionString"];
 
-Console.WriteLine(connectionString);
+Console.WriteLine(connectionString); 
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
@@ -87,8 +87,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
  
- 
-
 app.UseHttpsRedirection();
 
 app.UseCors();
