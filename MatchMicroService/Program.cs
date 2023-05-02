@@ -1,6 +1,8 @@
 using Application.Interfaces;
 using Application.UseCases;
+using Infrastructure.Commands;
 using Infrastructure.Persistence;
+using Infrastructure.Queries;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -70,6 +72,10 @@ Console.WriteLine(connectionString);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
 
+builder.Services.AddTransient<IMatchServices, MatchServices>();
+builder.Services.AddTransient<IMatchCommands, MatchCommands>();
+builder.Services.AddTransient<IMatchQueries, MatchQueries>();
+
 builder.Services.AddTransient<ITokenServices, TokenServices>();
 
 var app = builder.Build();
@@ -80,6 +86,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+ 
+ 
 
 app.UseHttpsRedirection();
 

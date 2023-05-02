@@ -1,7 +1,9 @@
 ﻿
+using Application.Interfaces;
+
 namespace Application.UseCases
 {
-    public class MatchServices
+    public class MatchServices : IMatchServices
     {
     }
 }
