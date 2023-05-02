@@ -6,6 +6,6 @@ namespace Application.Interfaces
     public interface IMatchCommands
     {
         Task<Match> CreateMatch(Match match);
-        Task<Match> DeleteMatch(Match match);
+        Task DeleteMatch(int id);
     }
 }
