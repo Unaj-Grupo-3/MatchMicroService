@@ -1,6 +1,8 @@
 using Application.Interfaces;
 using Application.UseCases;
+using Infrastructure.Commands;
 using Infrastructure.Persistence;
+using Infrastructure.Queries;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -65,10 +67,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 string connectionString = builder.Configuration["ConnectionString"];
 
-Console.WriteLine(connectionString);
+Console.WriteLine(connectionString); 
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
+
+builder.Services.AddTransient<IMatchServices, MatchServices>();
+builder.Services.AddTransient<IMatchCommands, MatchCommands>();
+builder.Services.AddTransient<IMatchQueries, MatchQueries>();
 
 builder.Services.AddTransient<ITokenServices, TokenServices>();
 
@@ -80,7 +86,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+ 
 app.UseHttpsRedirection();
 
 app.UseCors();

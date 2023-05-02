@@ -29,17 +29,16 @@ namespace Infrastructure.Persistence
                 entity.Property(d => d.DateId).ValueGeneratedOnAdd();
                 entity.Property(d => d.Description).HasMaxLength(255);
                 entity.Property(d => d.State).HasDefaultValue(0);
-
             });
 
             modelBuilder.Entity<UserMatch>(entity =>
             {
                 entity.HasKey(ue => ue.UserMatchId);
                 entity.Property(ue => ue.UserMatchId).ValueGeneratedOnAdd();
-                entity.Property(ue => ue.UserMainId).IsRequired();
-                entity.Property(ue => ue.UserSecundaryId).IsRequired();
-                entity.Property(ue => ue.CreatedAt).ValueGeneratedOnAdd();
-                entity.Property(ue => ue.Like).IsRequired();
+                entity.Property(ue => ue.User1).IsRequired();
+                entity.Property(ue => ue.User2).IsRequired();
+                entity.Property(ue => ue.LikeUser1).IsRequired();
+                entity.Property(ue => ue.LikeUser2).IsRequired();
             });
         }
     }
