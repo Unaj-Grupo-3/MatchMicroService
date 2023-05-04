@@ -22,13 +22,13 @@ namespace Infrastructure.Queries
             return match;
         }
 
-        public async Task<IList<Match>> GetByUserId(int userId)
+        public async Task<IList<Match>> GetByUserId(Guid userId)
         {
             IList<Match> matches = await _context.Matches.Where(x => x.User1Id == userId || x.User2Id == userId).ToListAsync();
             return matches;
         }
 
-        public async Task<Match> GetByUsersIds(int userId1, int userId2)
+        public async Task<Match> GetByUsersIds(Guid userId1, Guid userId2)
         {
             //Match match = await _context.Matches.FirstOrDefaultAsync(x => (x.User1Id == userId1 || x.User2Id == userId1) && (x.User1Id == userId2 || x.User2Id == userId2));
 
@@ -36,8 +36,6 @@ namespace Infrastructure.Queries
                                         .Where(x => x.User1Id == userId1 || x.User2Id == userId1)
                                         .Where(x => x.User1Id == userId2 || x.User2Id == userId2)
                                         .FirstOrDefaultAsync();
-
-
             return match;
         }
     }

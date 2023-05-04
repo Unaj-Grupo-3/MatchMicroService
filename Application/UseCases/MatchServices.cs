@@ -56,7 +56,7 @@ namespace Application.UseCases
             return response;
         }
 
-        public async Task<IList<MatchResponse>> GetByUserId(int userId)
+        public async Task<IList<MatchResponse>> GetByUserId(Guid userId)
         {
             IList<Match> matches = await _queries.GetByUserId(userId);
 
@@ -82,7 +82,7 @@ namespace Application.UseCases
             return matchResponses;
         }
 
-        public async Task<MatchResponse> GetByUsersIds(int userId1, int userId2)
+        public async Task<MatchResponse> GetByUsersIds(Guid userId1, Guid userId2)
         {
             Match match = await _queries.GetByUsersIds(userId1, userId2);
 

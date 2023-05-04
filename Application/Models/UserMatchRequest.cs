@@ -1,9 +1,10 @@
 ﻿
 namespace Application.Models
 {
-    public class MatchRequest
+    public class UserMatchRequest
     {
-        public Guid User1 { get; set; }
         public Guid User2 { get; set; }
+        public bool LikeUser1 { get; set; }
+
     }
 }

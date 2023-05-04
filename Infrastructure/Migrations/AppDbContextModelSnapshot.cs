@@ -50,8 +50,8 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("DateId");
 
@@ -73,12 +73,12 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("User1Id")
-                        .HasColumnType("int")
+                    b.Property<Guid>("User1Id")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("User1");
 
-                    b.Property<int>("User2Id")
-                        .HasColumnType("int")
+                    b.Property<Guid>("User2Id")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("User2");
 
                     b.HasKey("MatchId");
@@ -106,11 +106,11 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("User1")
-                        .HasColumnType("int");
+                    b.Property<Guid>("User1")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("User2")
-                        .HasColumnType("int");
+                    b.Property<Guid>("User2")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserMatchId");
 

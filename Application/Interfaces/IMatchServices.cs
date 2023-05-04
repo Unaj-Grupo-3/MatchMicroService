@@ -7,7 +7,7 @@ namespace Application.Interfaces
         Task<MatchResponse> CreateMatch(MatchRequest request);
         Task DeleteMatch(int id);
         Task<MatchResponse> GetById(int id);
-        Task<IList<MatchResponse>> GetByUserId(int userId);
-        Task<MatchResponse> GetByUsersIds(int userId1, int userId2);
+        Task<IList<MatchResponse>> GetByUserId(Guid userId);
+        Task<MatchResponse> GetByUsersIds(Guid userId1, Guid userId2);
     }
 }

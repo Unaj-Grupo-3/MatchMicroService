@@ -44,11 +44,11 @@ namespace MatchMicroService.Controllers
                 // Obtener el id de los users del match
                 if (!_tokenServices.ValidateUserId(identity, response.User1) & !_tokenServices.ValidateUserId(identity, response.User2))
                 {
-                    // Cambiar en algun momento
+                    // Cambiar en algun momento 403
                     return Unauthorized();
                 }
 
-                return new JsonResult(new { Message = "Se ha encontrado al Match con exito", Response = response }) { StatusCode = 500 };
+                return new JsonResult(new { Message = "Se ha encontrado al Match con exito", Response = response }) { StatusCode = 200 };
 
             }
             catch (Exception ex)
@@ -56,6 +56,40 @@ namespace MatchMicroService.Controllers
                 return new JsonResult(new {Message =  ex.Message}) { StatusCode = 500};
             }
         }
+        
+        /////////////////USER MATCH///////////////
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UserMatch(UserMatchRequest request)
+        {
+            //user token, user2, bool like/dislike ->userMatch
+            //add
+            //update
+            //exist u1, u2 -> match
+                //request.User2
+                //request.LikeUser1
 
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                Guid id = _tokenServices.GetUserId(identity);
+
+
+                //id esta en User2?
+                //Si
+                //Match
+                //No Match
+                //id esta en User1?
+                //si -> Update
+                //no -> add
+
+                //UserMatchResponse  bool isLike
+                return new JsonResult(new());
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { ex.Message }) { StatusCode = 500 };
+            }
+        }
     }
 }

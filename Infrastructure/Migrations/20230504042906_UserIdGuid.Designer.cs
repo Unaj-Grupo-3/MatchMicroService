@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230502083655_ChangeUserMatch")]
-    partial class ChangeUserMatch
+    [Migration("20230504042906_UserIdGuid")]
+    partial class UserIdGuid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,8 +53,8 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("DateId");
 
@@ -76,12 +76,12 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("User1Id")
-                        .HasColumnType("int")
+                    b.Property<Guid>("User1Id")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("User1");
 
-                    b.Property<int>("User2Id")
-                        .HasColumnType("int")
+                    b.Property<Guid>("User2Id")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("User2");
 
                     b.HasKey("MatchId");
@@ -109,11 +109,11 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("User1")
-                        .HasColumnType("int");
+                    b.Property<Guid>("User1")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("User2")
-                        .HasColumnType("int");
+                    b.Property<Guid>("User2")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserMatchId");
 

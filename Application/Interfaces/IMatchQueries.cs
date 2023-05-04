@@ -6,7 +6,7 @@ namespace Application.Interfaces
     public interface IMatchQueries
     {
         Task<Match> GetById(int id);
-        Task<IList<Match>> GetByUserId(int userId);
-        Task<Match> GetByUsersIds(int userId1, int userId2);
+        Task<IList<Match>> GetByUserId(Guid userId);
+        Task<Match> GetByUsersIds(Guid userId1, Guid userId2);
     }
 }
