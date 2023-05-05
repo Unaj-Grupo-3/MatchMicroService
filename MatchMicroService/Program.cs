@@ -82,6 +82,10 @@ builder.Services.AddTransient<IUserMatchCommands, UserMatchCommands>();
 builder.Services.AddTransient<IUserMatchQueries, UserMatchQueries>();
 builder.Services.AddTransient<IUserMatchServices, UserMatchServices>();
 
+builder.Services.AddTransient<IDateCommands, DateCommands>();
+builder.Services.AddTransient<IDateQueries, DateQueries>();
+builder.Services.AddTransient<IDateServices, DateServices>();
+
 
 var app = builder.Build();
 
