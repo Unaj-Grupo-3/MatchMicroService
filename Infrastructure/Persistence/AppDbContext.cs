@@ -29,6 +29,10 @@ namespace Infrastructure.Persistence
                 entity.Property(d => d.DateId).ValueGeneratedOnAdd();
                 entity.Property(d => d.Description).HasMaxLength(255);
                 entity.Property(d => d.State).HasDefaultValue(0);
+
+                entity.HasOne<Match>(e => e.Match)
+                      .WithMany(e => Dates)
+                      .HasForeignKey(e => e.MatchId);
             });
 
             modelBuilder.Entity<UserMatch>(entity =>
