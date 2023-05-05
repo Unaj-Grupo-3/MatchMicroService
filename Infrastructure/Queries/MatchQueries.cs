@@ -1,5 +1,4 @@
-﻿
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +13,11 @@ namespace Infrastructure.Queries
         {
             _context = context;
         }
-        
+        public async Task<IList<Match>> GetAll()
+        {
+            IList<Match> matches = await _context.Matches.ToListAsync();
+            return matches;
+        }
         public async Task<Match> GetById(int id)
         {
             Match match = await _context.Matches.FirstOrDefaultAsync(x => x.MatchId == id);
@@ -36,8 +39,6 @@ namespace Infrastructure.Queries
                                         .Where(x => x.User1Id == userId1 || x.User2Id == userId1)
                                         .Where(x => x.User1Id == userId2 || x.User2Id == userId2)
                                         .FirstOrDefaultAsync();
-
-
             return match;
         }
     }
