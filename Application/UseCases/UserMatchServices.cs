@@ -1,7 +1,5 @@
-﻿
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models;
-using Domain.Entities;
 
 namespace Application.UseCases
 {

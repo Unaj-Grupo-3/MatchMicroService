@@ -89,11 +89,14 @@ namespace MatchMicroService.Controllers
                 return new JsonResult(new { ex.Message }) { StatusCode = 500 };
             }
         }
-    }
-}//        public async Task<IActionResult> GetMatchesByUserId() auth
-//  getAll Match
 
-//getdatesbyuserid() auth
-//post dates()auth
-//put changestate by user2()auth
+        //public async Task<IActionResult> GetMatchesByUserId() auth
+
+        //getdatesbyuserid() auth
+        //post dates()auth
+        //put changestate by user2()auth
+
+    }
+}
+
 
