@@ -9,18 +9,6 @@ namespace Application.UseCases
 {
     public class TokenServices : ITokenServices
     {
-        public bool IsExpiredToken(ClaimsIdentity identity)
-        {
-
-            var exp = identity.Claims.FirstOrDefault(x => x.Type == "exp").Value;
-
-            var expirationDateUnix = long.Parse(exp.ToString());
-            var expirationDateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(expirationDateUnix);
-
-            return expirationDateTimeOffset.UtcDateTime > DateTime.UtcNow;
-
-        }
-
         public bool ValidateUserId(ClaimsIdentity identity,int userId)
         {
             try
@@ -39,6 +27,11 @@ namespace Application.UseCases
             {
                 return false;
             }
+        }
+        public int GetUserId(ClaimsIdentity identity)
+        {
+            var id = int.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+            return id;
         }
     }
 }

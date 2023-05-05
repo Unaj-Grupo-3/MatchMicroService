@@ -72,13 +72,20 @@ Console.WriteLine(connectionString);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
 
-builder.Services.AddTransient<IMatchServices, MatchServices>();
 builder.Services.AddTransient<IMatchCommands, MatchCommands>();
 builder.Services.AddTransient<IMatchQueries, MatchQueries>();
+builder.Services.AddTransient<IMatchServices, MatchServices>();
 
 builder.Services.AddTransient<ITokenServices, TokenServices>();
 
+<<<<<<< HEAD
 builder.Services.AddTransient<IDateCommands, DateCommands>();
+=======
+builder.Services.AddTransient<IUserMatchCommands, UserMatchCommands>();
+builder.Services.AddTransient<IUserMatchQueries, UserMatchQueries>();
+builder.Services.AddTransient<IUserMatchServices, UserMatchServices>();
+
+>>>>>>> e3e03680fde60f97c904f4a41aac5bb31ab20140
 
 var app = builder.Build();
 
