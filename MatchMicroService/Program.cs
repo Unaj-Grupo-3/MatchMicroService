@@ -78,6 +78,8 @@ builder.Services.AddTransient<IMatchQueries, MatchQueries>();
 
 builder.Services.AddTransient<ITokenServices, TokenServices>();
 
+builder.Services.AddTransient<IDateCommands, DateCommands>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
