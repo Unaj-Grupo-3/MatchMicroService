@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.UseCases;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -43,8 +44,24 @@ namespace MatchMicroService.Controllers
                 return Unauthorized();
             }
         }
+
+        [HttpGet("/me")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetDatesMe()
+        {
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                int userId = _tokenServices.GetUserId(identity);
+
+                IList<DateResponse> response = await _services.GetDatesByUserId(userId);
+                return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { ex.Message }) { StatusCode = 500 };
+            }
+        }
     }
 }
-//getdatesbyuserid() auth
-//post dates()auth
 //put changestate by user2()auth

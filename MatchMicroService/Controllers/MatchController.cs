@@ -32,6 +32,7 @@ namespace MatchMicroService.Controllers
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 int userId = _tokenServices.GetUserId(identity);
                 var response = await _userMatchServices.AddOrUpdate(userId, request.User2, request.LikeUser2);
+                //if (response.IsMatch){addMatch}
                 return new JsonResult(response);
             }
             catch (Exception ex)

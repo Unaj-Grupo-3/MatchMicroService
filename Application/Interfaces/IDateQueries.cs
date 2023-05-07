@@ -1,14 +1,13 @@
-﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Models;
+using Domain.Entities;
+
 
 namespace Application.Interfaces
 {
     public interface IDateQueries
     {
         Task<Date> GetDateById(int id);
+        Task<IList<DateResponse>> GetDatesByUserId(int userId);
+
     }
 }
