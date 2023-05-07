@@ -42,12 +42,6 @@ namespace Application.UseCases
             await _commands.DeleteMatch(id);
         }
 
-        public async Task<IList<Match>> GetAll()
-        {
-            IList<Match> matches = await _queries.GetAll();
-            return matches;
-        }
-
         public async Task<MatchResponse> GetById(int id)
         {
             Match match = await _queries.GetById(id);

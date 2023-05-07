@@ -60,11 +60,11 @@ namespace MatchMicroService.Controllers
         /// </summary>
         /// <returns> List<Match> o List<MatchGetResponse> </returns> 
         [HttpGet]
-        public async Task<IActionResult> GetMatches()
+        public async Task<IActionResult> GetUserMatches()
         {
             try
             {
-                IList<Match> response = await _matchServices.GetAll();
+                IList<UserMatch> response = await _userMatchServices.GetAll();
                 return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
             }
             catch (Exception ex)
