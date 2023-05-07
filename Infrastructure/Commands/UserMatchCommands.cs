@@ -24,7 +24,7 @@ namespace Infrastructure.Commands
             {
                 User1 = userMatch.User1,
                 User2 = userMatch.User2,
-                IsMatch = null,
+                IsMatch = false,
             };
         }
 

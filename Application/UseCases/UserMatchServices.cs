@@ -25,7 +25,7 @@ namespace Application.UseCases
             return matches;
         }
         
-        public async Task<UserMatchResponse> AddOrUpdate(int userId1, int userId2, int LikeUser2)
+        public async Task<UserMatchResponse> AddOrUpdate(int userId1, int userId2, int like)
         {
             UserMatchResponse response = new();
 
@@ -33,7 +33,7 @@ namespace Application.UseCases
             
             if(entry != null)
             {
-                response = await _commands.UpdateRow(entry.UserMatchId, LikeUser2, entry.LikeUser2); //Agregar Like en la row del User2
+                response = await _commands.UpdateRow(entry.UserMatchId, entry.LikeUser1, like); //Agregar Like en la row del User2
                 
             }
             else 
@@ -42,7 +42,7 @@ namespace Application.UseCases
 
                 if (previousRow != null)
                 {
-                    response = await _commands.UpdateRow(previousRow.UserMatchId, previousRow.LikeUser2, LikeUser2); //Modificar Like Anterior
+                    response = await _commands.UpdateRow(previousRow.UserMatchId, like,previousRow.LikeUser2 ); //Modificar Like Anterior
                 }
                 else
                 {
@@ -50,8 +50,9 @@ namespace Application.UseCases
                     {
                         User1 = userId1,
                         User2 = userId2,
-                        LikeUser2 = LikeUser2,
+                        LikeUser1 = like,
                         CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now,
                     });
                 }
 

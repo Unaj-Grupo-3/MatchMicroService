@@ -1,9 +1,7 @@
 ﻿
 
 using Application.Interfaces;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Principal;
 
 namespace Application.UseCases
 {

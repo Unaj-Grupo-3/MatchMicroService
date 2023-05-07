@@ -31,8 +31,10 @@ namespace MatchMicroService.Controllers
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 int userId = _tokenServices.GetUserId(identity);
-                var response = await _userMatchServices.AddOrUpdate(userId, request.User2, request.LikeUser2);
-                if ((bool)response.IsMatch)
+                int like = request.Like ? 1 : -1;
+                var response = await _userMatchServices.AddOrUpdate(userId, request.User2, like);
+
+                if (response.IsMatch)
                 {
                     await _matchServices.CreateMatch(new MatchRequest
                     {
@@ -40,6 +42,7 @@ namespace MatchMicroService.Controllers
                         User2 = response.User2,
                     });
                 }
+
                 return new JsonResult(new { Message = "Se ha agregado interaccion.", Response = response }) { StatusCode = 201 };
             }
             catch (Exception ex)
@@ -68,8 +71,8 @@ namespace MatchMicroService.Controllers
                 // Obtener el id de los users del match
                 if (!_tokenServices.ValidateUserId(identity, response.User1) & !_tokenServices.ValidateUserId(identity, response.User2))
                 {
-                    // Cambiar en algun momento
-                    return Unauthorized();
+                    // Cambiar en algun momento  -> 403
+                    return Forbid();
                 }
 
                 return new JsonResult(new { Message = "Se ha encontrado al Match con exito", Response = response }) { StatusCode = 200 };
