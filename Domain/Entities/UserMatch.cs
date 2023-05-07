@@ -8,11 +8,11 @@
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        // 3 estados del Like. null => Todavia no lo vio.
-        //                     true => Le dio Like (checkear el otro)
-        //                     false => Le dio Dislike
+        // 3 estados del Like. 0 => Todavia no lo vio.
+        //                     1 => Le dio Like (checkear el otro)
+        //                    -1 => Le dio Dislike
 
-        public bool LikeUser2 { get; set; }  
-        public bool LikeUser1 { get; set; }
+        public int LikeUser2 { get; set; }  
+        public int LikeUser1 { get; set; }
     }
 }

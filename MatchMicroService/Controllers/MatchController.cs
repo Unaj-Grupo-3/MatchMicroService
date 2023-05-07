@@ -74,14 +74,15 @@ namespace MatchMicroService.Controllers
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> UserLike(UserMatchRequest request)
         {
             try
             {
-                var identity = HttpContext.User.Identity as ClaimsIdentity;
-                int userId = _tokenServices.GetUserId(identity);
-                var response = await _userMatchServices.AddOrUpdate(userId, request.User2, request.LikeUser1);
+                //var identity = HttpContext.User.Identity as ClaimsIdentity;
+                //int userId = _tokenServices.GetUserId(identity);
+                int userId = 3;
+                var response = await _userMatchServices.AddOrUpdate(userId, request.User2, request.LikeUser2);
                 return new JsonResult(response);
             }
             catch (Exception ex)
