@@ -45,3 +45,6 @@ namespace MatchMicroService.Controllers
         }
     }
 }
+//getdatesbyuserid() auth
+//post dates()auth
+//put changestate by user2()auth

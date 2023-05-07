@@ -19,6 +19,12 @@ namespace Application.UseCases
             IList<UserMatch> matches = await _queries.GetAllMatch();
             return matches;
         }
+        public async Task<IList<UserMatch>> GetMatchesByUserId(int userId)
+        {
+            IList<UserMatch> matches = await _queries.GetMatchByUserId(userId);
+            return matches;
+        }
+        
         public async Task<UserMatchResponse> AddOrUpdate(int userId1, int userId2, int LikeUser2)
         {
             UserMatchResponse response = new();

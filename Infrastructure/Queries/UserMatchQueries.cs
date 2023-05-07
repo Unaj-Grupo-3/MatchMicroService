@@ -21,7 +21,15 @@ namespace Infrastructure.Queries
                 .ToListAsync();
             return matches;
         }
-
+        public async Task<IList<UserMatch>> GetMatchByUserId(int userId)
+        {
+            IList<UserMatch> matches = await _context.UserMatches
+                .Where(m => 
+                        (m.User1 == userId || m.User2 == userId) 
+                        && m.LikeUser1 == 1 && m.LikeUser2 == 1)
+                .ToListAsync();
+            return matches;
+        }
         public async Task<UserMatch> WasSeen(int userId1, int userId2)
         {
             var userMatch = await _context.UserMatches
