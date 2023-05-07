@@ -8,6 +8,6 @@ namespace Domain.Entities
         public int User2Id { get; set;}
         public DateTime CreatedAt { get; set; }
 
-        public Date? Date { get; set; }
+        public IList<Date> Date { get; set; }
     }
 }

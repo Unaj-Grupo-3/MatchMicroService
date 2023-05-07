@@ -23,6 +23,31 @@ namespace MatchMicroService.Controllers
             _userMatchServices = userMatchServices;
         }
 
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> UserLike(UserMatchRequest request)
+        {
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                int userId = _tokenServices.GetUserId(identity);
+                var response = await _userMatchServices.AddOrUpdate(userId, request.User2, request.LikeUser2);
+                if ((bool)response.IsMatch)
+                {
+                    await _matchServices.CreateMatch(new MatchRequest
+                    {
+                        User1 = response.User1,
+                        User2 = response.User2,
+                    });
+                }
+                return new JsonResult(new { Message = "Se ha agregado interaccion.", Response = response }) { StatusCode = 201 };
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { ex.Message }) { StatusCode = 500 };
+            }
+        }
+
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetMatchById(int id)
@@ -55,16 +80,17 @@ namespace MatchMicroService.Controllers
                 return new JsonResult(new {Message =  ex.Message}) { StatusCode = 500};
             }
         }
-        /// <summary>
-        /// Get All Matches {id u1 u2 create date}
-        /// </summary>
-        /// <returns> List<Match> o List<MatchGetResponse> </returns> 
-        [HttpGet]
-        public async Task<IActionResult> GetMatches()
+
+        [HttpGet("/api/v1/Match/me")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetUserMatchesMe()
         {
             try
             {
-                IList<Match> response = await _matchServices.GetAll();
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                int userId = _tokenServices.GetUserId(identity);
+
+                IList<UserMatch> response = await _userMatchServices.GetMatchesByUserId(userId);
                 return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
             }
             catch (Exception ex)
@@ -73,31 +99,19 @@ namespace MatchMicroService.Controllers
             }
         }
 
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> UserLike(UserMatchRequest request)
+        [HttpGet]
+        public async Task<IActionResult> GetUserMatches()
         {
             try
             {
-                var identity = HttpContext.User.Identity as ClaimsIdentity;
-                int userId = _tokenServices.GetUserId(identity);
-                var response = await _userMatchServices.AddOrUpdate(userId, request.User2, request.LikeUser1);
-                return new JsonResult(response);
+                IList<UserMatch> response = await _userMatchServices.GetAll();
+                return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
             }
             catch (Exception ex)
             {
                 return new JsonResult(new { ex.Message }) { StatusCode = 500 };
             }
         }
-
-        //public async Task<IActionResult> GetMatchesByUserId() auth
-
-        //getdatesbyuserid() auth
-        //post dates()auth
-        //put changestate by user2()auth
-
-
-
     }
 }
 

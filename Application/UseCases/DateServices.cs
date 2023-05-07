@@ -53,5 +53,11 @@ namespace Application.UseCases
 
             return response;
         }
+
+        public async Task<IList<DateResponse>> GetDatesByUserId(int userId)
+        {
+            IList<DateResponse> dates = await _queries.GetDatesByUserId(userId);
+            return dates;
+        }
     }
 }

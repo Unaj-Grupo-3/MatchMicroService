@@ -1,4 +1,5 @@
 ﻿using Application.Models;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,7 @@ namespace Application.Interfaces
     public interface IDateServices
     {
         Task<DateResponse> CreateDate(DateRequest req);
+        public Task<IList<DateResponse>> GetDatesByUserId(int userId);
+
     }
 }
