@@ -31,7 +31,7 @@ namespace Infrastructure.Persistence
                 entity.Property(d => d.State).HasDefaultValue(0);
 
                 entity.HasOne<Match>(e => e.Match)
-                      .WithMany(e => Dates)
+                      .WithMany(e => e.Date)
                       .HasForeignKey(e => e.MatchId);
             });
 
