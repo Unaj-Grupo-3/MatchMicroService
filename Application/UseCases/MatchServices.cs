@@ -9,14 +9,16 @@ namespace Application.UseCases
     {
         private readonly IMatchCommands _commands;
         private readonly IMatchQueries _queries;
+        private readonly IChatApiServices _chatApiServices;
 
-        public MatchServices(IMatchCommands commands, IMatchQueries queries)
+        public MatchServices(IMatchCommands commands, IMatchQueries queries, IChatApiServices chatApiServices)
         {
             _commands = commands;
             _queries = queries;
+            _chatApiServices = chatApiServices;
         }
 
-        public async Task<MatchResponse> CreateMatch(MatchRequest request)
+        public async Task<MatchResponse2> CreateMatch(MatchRequest request)
         {
             Match match = new Match()
             {
@@ -27,14 +29,33 @@ namespace Application.UseCases
 
             Match create = await _commands.CreateMatch(match);
 
-            MatchResponse response = new MatchResponse()
+            if(create != null)
             {
-                Id = create.MatchId,
-                User1 = create.User1Id,
-                User2 = create.User2Id,
-            };
+                //Creo una instancia de Chat -> Chat API
+                var chatResp = await _chatApiServices.CreateChat(match.User1Id, match.User2Id);
 
-            return response;
+                if(chatResp != null)
+                {
+                    MatchResponse2 response = new MatchResponse2()
+                    {
+                        Id = create.MatchId,
+                        User1 = create.User1Id,
+                        User2 = create.User2Id,
+                        ChatId = chatResp.ChatId
+                    };
+
+                    return response;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
         public async Task DeleteMatch(int id)
