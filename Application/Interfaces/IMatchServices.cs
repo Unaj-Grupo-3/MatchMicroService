@@ -5,7 +5,7 @@ namespace Application.Interfaces
 {
     public interface IMatchServices
     {
-        Task<MatchResponse> CreateMatch(MatchRequest request);
+        Task<MatchResponse2> CreateMatch(MatchRequest request);
         Task DeleteMatch(int id);
         Task<MatchResponse> GetById(int id);
         Task<IList<MatchResponse>> GetByUserId(int userId);

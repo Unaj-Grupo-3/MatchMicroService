@@ -1,10 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
-using Application.UseCases;
-using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
