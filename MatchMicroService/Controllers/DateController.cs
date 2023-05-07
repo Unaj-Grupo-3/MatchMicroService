@@ -62,6 +62,19 @@ namespace MatchMicroService.Controllers
                 return new JsonResult(new { ex.Message }) { StatusCode = 500 };
             }
         }
+
+        [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> ChangeStateByUser2(int state)
+        {
+            try
+            {
+                return new JsonResult(new ()) { StatusCode = 200 };
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { ex.Message }) { StatusCode = 500 };
+            }
+        }
     }
 }
-//put changestate by user2()auth
