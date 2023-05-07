@@ -7,7 +7,7 @@ namespace Application.Interfaces
     {
         public Task<IList<UserMatch>> GetAll();
 
-        public Task<UserMatchResponse> AddOrUpdate(int userId1, int userId2, bool LikeUser1);
+        public Task<UserMatchResponse> AddOrUpdate(int userId1, int userId2, int LikeUser2);
 
     }
 }
