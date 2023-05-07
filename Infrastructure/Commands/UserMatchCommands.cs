@@ -33,6 +33,7 @@ namespace Infrastructure.Commands
             var row = await _context.UserMatches.FindAsync(UserMatchId);
             row.LikeUser1 = LikeUser1;
             row.LikeUser2 = LikeUser2;
+            row.UpdatedAt = DateTime.Now;
 
             await _context.SaveChangesAsync();
 

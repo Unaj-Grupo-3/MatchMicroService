@@ -50,7 +50,8 @@ namespace Application.UseCases
                     {
                         User1 = userId1,
                         User2 = userId2,
-                        LikeUser2 = LikeUser2
+                        LikeUser2 = LikeUser2,
+                        CreatedAt = DateTime.Now,
                     });
                 }
 
