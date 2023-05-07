@@ -46,6 +46,11 @@ namespace Application.UseCases
         {
             Match match = await _queries.GetById(id);
 
+            if (match == null)
+            {
+                return null;
+            }
+
             MatchResponse response = new MatchResponse()
             {
                 Id = match.MatchId,
@@ -85,6 +90,12 @@ namespace Application.UseCases
         public async Task<MatchResponse> GetByUsersIds(int userId1, int userId2)
         {
             Match match = await _queries.GetByUsersIds(userId1, userId2);
+
+            if (match == null)
+            {
+                return null;
+            }
+
 
             MatchResponse response = new MatchResponse()
             {
