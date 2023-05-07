@@ -27,13 +27,8 @@ namespace Application.UseCases
             
             if(entry != null)
             {
-                response = await _commands.UpdateRow(new UserMatch //Agregar Like en la row del User2
-                {
-                    User1 = entry.User1,
-                    User2 = entry.User2,
-                    LikeUser1 = LikeUser2,
-                    LikeUser2 = entry.LikeUser2
-                });
+                response = await _commands.UpdateRow(entry.UserMatchId, LikeUser2, entry.LikeUser2); //Agregar Like en la row del User2
+                
             }
             else 
             {
@@ -41,13 +36,7 @@ namespace Application.UseCases
 
                 if (previousRow != null)
                 {
-                    response = await _commands.UpdateRow(new UserMatch //Modificar Like Anterior
-                    {
-                        User1 = previousRow.User1,
-                        User2 = previousRow.User2,
-                        LikeUser1 = previousRow.LikeUser1,
-                        LikeUser2 = LikeUser2
-                    });
+                    response = await _commands.UpdateRow(previousRow.UserMatchId, previousRow.LikeUser2, LikeUser2); //Modificar Like Anterior
                 }
                 else
                 {
