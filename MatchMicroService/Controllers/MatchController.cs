@@ -32,8 +32,15 @@ namespace MatchMicroService.Controllers
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 int userId = _tokenServices.GetUserId(identity);
                 var response = await _userMatchServices.AddOrUpdate(userId, request.User2, request.LikeUser2);
-                //if (response.IsMatch){addMatch}
-                return new JsonResult(response);
+                if ((bool)response.IsMatch)
+                {
+                    await _matchServices.CreateMatch(new MatchRequest
+                    {
+                        User1 = response.User1,
+                        User2 = response.User2,
+                    });
+                }
+                return new JsonResult(new { Message = "Se ha agregado interaccion.", Response = response }) { StatusCode = 201 };
             }
             catch (Exception ex)
             {
