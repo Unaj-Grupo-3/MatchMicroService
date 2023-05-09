@@ -127,5 +127,10 @@ namespace Application.UseCases
 
             return response;
         }
+        public async Task<IList<Match>> GetAll()
+        {
+            IList<Match> matches = await _queries.GetAllMatch();
+            return matches;
+        }
     }
 }

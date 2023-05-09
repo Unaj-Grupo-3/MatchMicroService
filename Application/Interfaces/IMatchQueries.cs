@@ -9,6 +9,8 @@ namespace Application.Interfaces
         Task<Match> GetById(int id);
         Task<IList<Match>> GetByUserId(int userId);
         Task<Match> GetByUsersIds(int userId1, int userId2);
+        Task<IList<Match>> GetAllMatch();
+
 
     }
 }

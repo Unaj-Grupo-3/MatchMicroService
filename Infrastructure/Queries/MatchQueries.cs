@@ -14,6 +14,13 @@ namespace Infrastructure.Queries
             _context = context;
         }
 
+        public async Task<IList<Match>> GetAllMatch()
+        {
+            IList<Match> matches = await _context.Matches
+                .ToListAsync();
+            return matches;
+        }
+
         public async Task<Match> GetById(int id)
         {
             Match match = await _context.Matches.FirstOrDefaultAsync(x => x.MatchId == id);

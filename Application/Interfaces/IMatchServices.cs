@@ -10,5 +10,7 @@ namespace Application.Interfaces
         Task<MatchResponse> GetById(int id);
         Task<IList<MatchResponse>> GetByUserId(int userId);
         Task<MatchResponse> GetByUsersIds(int userId1, int userId2);
+        Task<IList<Match>> GetAll();
+
     }
 }
