@@ -39,8 +39,6 @@ namespace Application.UseCases
                     MatchResponse2 response = new MatchResponse2()
                     {
                         Id = create.MatchId,
-                        User1 = create.User1Id,
-                        User2 = create.User2Id,
                         ChatId = chatResp.ChatId
                     };
 

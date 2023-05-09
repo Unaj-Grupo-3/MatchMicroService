@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
+using Azure;
 
 namespace MatchMicroService.Controllers
 {
@@ -23,6 +24,14 @@ namespace MatchMicroService.Controllers
             _userMatchServices = userMatchServices;
         }
 
+
+       /* Comportamiento actual del endpoint
+        * 
+        * Sino se cre el chat no se crea el match
+        * Si hay problemas de conexion con el microservicios Chat tira un 502
+        * 
+        */
+
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> UserLike(UserMatchRequest request)
@@ -36,14 +45,38 @@ namespace MatchMicroService.Controllers
 
                 if (response.IsMatch)
                 {
-                    await _matchServices.CreateMatch(new MatchRequest
+                    var match = await _matchServices.CreateMatch(new MatchRequest
                     {
                         User1 = response.User1,
-                        User2 = response.User2,
+                        User2 = response.User2
                     });
+
+                    if (match != null)
+                    {
+                        var response3 = new UserMatchResponse
+                        {
+                            User1 = response.User1,
+                            User2 = response.User2,
+                            IsMatch = true,
+                            Match = new MatchResponse2
+                            {
+                                Id = match.Id,
+                                ChatId = match.ChatId
+                            }
+                        };
+
+                        return new JsonResult(new { Message = "Se ha agregado interaccion.", Response = response3 }) { StatusCode = 201 };
+                    }
+                    else
+                    {
+                        return new JsonResult(new { Message = "Hubo un problema con la conexión a otras APIs. ", Response = response }) { StatusCode = 502 };
+                    }
+                }
+                else
+                {
+                    return new JsonResult(new { Message = "Se ha agregado interaccion.", Response = response }) { StatusCode = 201 };
                 }
 
-                return new JsonResult(new { Message = "Se ha agregado interaccion.", Response = response }) { StatusCode = 201 };
             }
             catch (Exception ex)
             {
