@@ -51,7 +51,7 @@ namespace MatchMicroService.Controllers
             }
         }
 
-        [HttpOptions]
+        [HttpGet("me")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetUserMatchesMe()
         {
