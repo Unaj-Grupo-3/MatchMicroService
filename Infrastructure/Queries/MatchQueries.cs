@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Models;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,15 @@ namespace Infrastructure.Queries
             _context = context;
         }
 
-        public async Task<IList<Match>> GetAllMatch()
+        public async Task<IList<MatchResponse>> GetAllMatch()
         {
-            IList<Match> matches = await _context.Matches
+            IList<MatchResponse> matches = await _context.Matches
+                .Select(m => new MatchResponse
+                {
+                    Id = m.MatchId,
+                    User1 = m.User1Id, 
+                    User2 = m.User2Id,
+                })
                 .ToListAsync();
             return matches;
         }

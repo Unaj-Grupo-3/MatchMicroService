@@ -15,11 +15,13 @@ namespace MatchMicroService.Controllers
     {
         private readonly ITokenServices _tokenServices;
         private readonly IMatchServices _matchServices;
+        private readonly IUserMatchServices _userMatchServices;
 
-        public MatchController(ITokenServices tokenServices, IMatchServices matchServices)
+        public MatchController(ITokenServices tokenServices, IMatchServices matchServices, IUserMatchServices userMatchServices)
         {
             _tokenServices = tokenServices;
             _matchServices = matchServices;
+            _userMatchServices = userMatchServices;
         }
 
         [HttpGet("{id}")]
@@ -54,12 +56,32 @@ namespace MatchMicroService.Controllers
                 return new JsonResult(new {Message =  ex.Message}) { StatusCode = 500};
             }
         }
+
+        [HttpGet("me")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetUserMatchesMe()
+        {
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                int userId = _tokenServices.GetUserId(identity);
+
+                IList<UserMatch> response = await _userMatchServices.GetMatchesByUserId(userId);
+                return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
+                //user.image, user.name, user.ape 
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { ex.Message }) { StatusCode = 500 };
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetMatches()
         {
             try
             {
-                IList<Match> response = await _matchServices.GetAll();
+                IList<MatchResponse> response = await _matchServices.GetAll();
                 return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
             }
             catch (Exception ex)
