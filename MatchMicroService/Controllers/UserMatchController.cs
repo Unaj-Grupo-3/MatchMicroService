@@ -27,9 +27,10 @@ namespace MatchMicroService.Controllers
 
        /* Comportamiento actual del endpoint
         * 
-        * Sino se cre el chat no se crea el match
+        * No hay dependencia con el micro de chat, se crea el match aunque halla problemas al crear el chat
+        * ChatID se muestra como -1 cuando no se crea
         * Si hay problemas de conexion con el microservicios Chat tira un 502
-        * 
+        *  
         */
 
         [HttpPost]
