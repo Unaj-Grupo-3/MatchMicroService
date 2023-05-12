@@ -131,9 +131,9 @@ namespace Application.UseCases
 
             return response;
         }
-        public async Task<IList<Match>> GetAll()
+        public async Task<IList<MatchResponse>> GetAll()
         {
-            IList<Match> matches = await _queries.GetAllMatch();
+            IList<MatchResponse> matches = await _queries.GetAllMatch();
             return matches;
         }
     }

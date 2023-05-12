@@ -85,24 +85,6 @@ namespace MatchMicroService.Controllers
             }
         }
 
-        [HttpGet("me")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetUserMatchesMe()
-        {
-            try
-            {
-                var identity = HttpContext.User.Identity as ClaimsIdentity;
-                int userId = _tokenServices.GetUserId(identity);
-
-                IList<UserMatch> response = await _userMatchServices.GetMatchesByUserId(userId);
-                return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(new { ex.Message }) { StatusCode = 500 };
-            }
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetUserMatches()
         {
