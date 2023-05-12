@@ -46,7 +46,13 @@ namespace Application.UseCases
                 }
                 else
                 {
-                    return null;
+                    MatchResponse2 noChatResp = new MatchResponse2()
+                    {
+                        Id = create.MatchId,
+                        ChatId = -1
+                    };
+
+                    return noChatResp;
                 }
             }
             else
