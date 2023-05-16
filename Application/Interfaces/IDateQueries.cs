@@ -8,6 +8,6 @@ namespace Application.Interfaces
     {
         Task<Date> GetDateById(int id);
         Task<IList<DateResponse>> GetDatesByUserId(int userId);
-
+        Task<IList<DateResponse>> GetDatesByMatchId(int macthId);
     }
 }

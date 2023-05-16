@@ -24,7 +24,7 @@ namespace MatchMicroService.Controllers
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> CreateDate(DateRequest req)
+        public async Task<IActionResult> CreateDate(DateRequest2 req)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             int userId = _tokenServices.GetUserId(identity);
