@@ -16,11 +16,10 @@ namespace Application.UseCases
             _queries = queries;
         }
 
-        public async Task<DateResponse> CreateDate(DateRequest req)
+        public async Task<DateResponse> CreateDate(DateRequest2 req)
         {
             Date date = new Date
             {
-                DateId = req.DateId,
                 MatchId = req.MatchId,
                 Location = req.Location,
                 Description = req.Description,
@@ -30,23 +29,10 @@ namespace Application.UseCases
 
             await _commands.InsertDate(date);
 
-            var query = await _queries.GetDateById(req.DateId);
+            var dates = await _queries.GetDatesByMatchId(req.MatchId);
+            var response = dates.FirstOrDefault(e => e.Time.Equals(date.Time));
 
-            DateResponse response = new DateResponse
-            {
-                DateId = query.DateId,
-                Location = query.Location,
-                Description = query.Description,
-                Time = query.Time,
-                State = query.State,
-                Match = new MatchResponse
-                {
-                    Id = query.MatchId,
-                    User1 = query.Match.User1Id,
-                    User2 = query.Match.User2Id
-                }
-            };
-
+            
             return response;
         }
 

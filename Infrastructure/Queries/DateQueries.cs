@@ -46,5 +46,28 @@ namespace Infrastructure.Queries
                 .ToListAsync();
             return matches;
         }
+
+        public async Task<IList<DateResponse>> GetDatesByMatchId(int macthId)
+        {
+            IList<DateResponse> dates = await _context.Dates
+                                                .Include(e => e.Match)
+                                                .Where(e => e.Match.MatchId == macthId)
+                                                .Select(d => new DateResponse
+                                                {
+                                                    DateId = d.DateId,
+                                                    Description = d.Description,
+                                                    Location = d.Location,
+                                                    Match = new MatchResponse
+                                                    {
+                                                        Id = d.MatchId,
+                                                        User1 = d.Match.User1Id,
+                                                        User2 = d.Match.User2Id,
+                                                    },
+                                                    State = d.State,
+                                                    Time = d.Time
+                                                }).ToListAsync();
+
+            return dates;
+        }
     }
 }
