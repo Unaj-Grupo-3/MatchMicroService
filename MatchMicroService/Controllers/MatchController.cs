@@ -6,6 +6,7 @@ using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
 using Application.UseCases;
+using System.Collections.Generic;
 
 namespace MatchMicroService.Controllers
 {
@@ -16,12 +17,14 @@ namespace MatchMicroService.Controllers
         private readonly ITokenServices _tokenServices;
         private readonly IMatchServices _matchServices;
         private readonly IUserMatchServices _userMatchServices;
+        private readonly IUserApiServices _userApiServices;
 
-        public MatchController(ITokenServices tokenServices, IMatchServices matchServices, IUserMatchServices userMatchServices)
+        public MatchController(ITokenServices tokenServices, IMatchServices matchServices, IUserMatchServices userMatchServices, IUserApiServices userApiServices)
         {
             _tokenServices = tokenServices;
             _matchServices = matchServices;
             _userMatchServices = userMatchServices;
+            _userApiServices = userApiServices;
         }
 
         [HttpGet("{id}")]
@@ -63,12 +66,44 @@ namespace MatchMicroService.Controllers
         {
             try
             {
+                IList<int> userIds = new List<int>();
+                IList<UserMatchResp2> respListUser = new List<UserMatchResp2>();
+
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 int userId = _tokenServices.GetUserId(identity);
 
                 IList<UserMatch> response = await _userMatchServices.GetMatchesByUserId(userId);
-                return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
-                //user.image, user.name, user.ape 
+                
+                foreach (var match in response)
+                {
+                    if (!userIds.Contains(match.User2))
+                        userIds.Add(match.User2);
+                    
+                    if (!userIds.Contains(match.User1))
+                        userIds.Add(match.User1);
+                }
+
+                List<UserResponse> usersInfo = await _userApiServices.GetUsers(userIds);
+
+                foreach(var i in response)
+                {
+                    UserMatchResp2 resp2 = new UserMatchResp2()
+                    {
+                        UserMatchId = i.UserMatchId,
+                        User1 = i.User1,
+                        User2 = i.User2,
+                        CreatedAt = i.CreatedAt,
+                        UpdatedAt = i.UpdatedAt,
+                        LikeUser2 = i.LikeUser2,
+                        LikeUser1 = i.LikeUser1,
+                        userInfo1 = usersInfo.FirstOrDefault(u => u.UserId == i.User1),
+                        userInfo2 = usersInfo.FirstOrDefault(s => s.UserId == i.User2)
+                    };
+
+                    respListUser.Add(resp2);
+                }
+
+                return new JsonResult(new { Count = respListUser.Count, Response = respListUser }) { StatusCode = 200 };
             }
             catch (Exception ex)
             {
