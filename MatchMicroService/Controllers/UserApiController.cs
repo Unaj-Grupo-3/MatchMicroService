@@ -18,9 +18,9 @@ namespace MatchMicroService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMatchUsers(int userId1, int userId2)
+        public async Task<IActionResult> GetMatchUsers([FromQuery] List<int> usersId)
         {
-            var response = await _services.GetMatchUsers(userId1, userId2);
+            var response = await _services.GetUsers(usersId);
 
             return Ok(response);
         }

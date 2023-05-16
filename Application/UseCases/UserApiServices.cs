@@ -24,12 +24,17 @@ namespace Application.UseCases
         }
 
         //Traer foto, nombre y apellido
-        public async Task<List<UserResponse>> GetMatchUsers(int userId1, int userId2)
+        public async Task<List<UserResponse>> GetUsers(IList<int> userIds)
         {
             try
             {
                 List<UserResponse> userList = new List<UserResponse>();
-                var qParams = _httpClient.BaseAddress + "User/userByIds?usersId=" + userId1 + "&usersId=" + userId2;
+                var qParams = _httpClient.BaseAddress + "User/userByIds?usersId=" + userIds[0];
+
+                for (int i = 1; i<userIds.Count; i++)
+                {
+                    qParams += "&usersId=" + userIds[i];
+                }
 
                 var response = await _httpClient.GetAsync(qParams);
 
