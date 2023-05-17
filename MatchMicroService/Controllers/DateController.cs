@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Models;
+using Azure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +15,14 @@ namespace MatchMicroService.Controllers
         private readonly IDateServices _services;
         private readonly ITokenServices _tokenServices;
         private readonly IMatchServices _matchServices;
+        private readonly IDateValidations _validations;
 
-        public DateController(IDateServices services, ITokenServices tokenServices, IMatchServices matchServices)
+        public DateController(IDateServices services, ITokenServices tokenServices, IMatchServices matchServices, IDateValidations validations)
         {
             _services = services;
             _tokenServices = tokenServices;
             _matchServices = matchServices;
+            _validations = validations;
         }
 
         [HttpPost]
@@ -62,11 +65,32 @@ namespace MatchMicroService.Controllers
 
         [HttpPut]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> ChangeStateByUser2(int state)
+        public async Task<IActionResult> ChangeStateByUser2(DateEditRequest req)
         {
             try
             {
-                return new JsonResult(new ()) { StatusCode = 200 };
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                int userId = _tokenServices.GetUserId(identity);
+
+                var isInDate = await _validations.IsInDate(userId, req);
+
+                if (isInDate)
+                {
+                    var response = await _services.EditDate(req);
+
+                    if (response != null)
+                    {
+                        return new JsonResult(new { Message = "La cita fue modificada exitosamente.", Response = response }) { StatusCode = 201 };
+                    }
+                    else
+                    {
+                        return new JsonResult(new { Message = "Hubo un problema durante el proceso. Vuelva a intetarlo mas tarde." }) { StatusCode = 500 };
+                    }  
+                }
+                else
+                {
+                    return new JsonResult(new { Message = "No autorizado." }) { StatusCode = 403 };
+                }
             }
             catch (Exception ex)
             {

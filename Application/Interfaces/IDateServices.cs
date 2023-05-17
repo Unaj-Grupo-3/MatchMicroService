@@ -6,5 +6,6 @@ namespace Application.Interfaces
     {
         Task<IList<DateResponse>> GetDatesByUserId(int userId);
         Task<DateResponse> CreateDate(DateRequest2 req);
+        Task<DateResponse> EditDate(DateEditRequest req);
     }
 }

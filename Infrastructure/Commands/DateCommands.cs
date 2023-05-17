@@ -1,11 +1,8 @@
 ﻿using Application.Interfaces;
+using Application.Models;
 using Domain.Entities;
 using Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Commands
 {
@@ -23,6 +20,23 @@ namespace Infrastructure.Commands
             _context.Add(date);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Date> AlterDate(DateEditRequest req)
+        {
+            var date = await _context.Dates.Include(e => e.Match)
+                                           .FirstOrDefaultAsync( e => e.DateId == req.DateId );
+
+            if (date == null)
+            {
+                return null;
+            }
+
+            date.State = req.State;
+
+            await _context.SaveChangesAsync();
+
+            return date;
         }
     }
 }

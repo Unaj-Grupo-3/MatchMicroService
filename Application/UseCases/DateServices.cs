@@ -41,5 +41,27 @@ namespace Application.UseCases
             IList<DateResponse> dates = await _queries.GetDatesByUserId(userId);
             return dates;
         }
+
+        public async Task<DateResponse> EditDate(DateEditRequest req)
+        {
+            var date = await _commands.AlterDate(req);
+
+            DateResponse resp = new DateResponse
+            {
+                DateId = date.DateId,
+                Location = date.Location,
+                Description = date.Description,
+                Time = date.Time,
+                State = date.State,
+                Match = new MatchResponse
+                {
+                    Id = date.Match.MatchId,
+                    User1 = date.Match.User1Id,
+                    User2 = date.Match.User2Id
+                }
+            };
+
+            return resp;
+        }
     }
 }
