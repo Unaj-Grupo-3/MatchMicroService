@@ -20,7 +20,7 @@ namespace Application.Models
 
         public int LikeUser2 { get; set; }
         public int LikeUser1 { get; set; }
-        public UserResponse userInfo1 { get; set; }
-        public UserResponse userInfo2 { get; set; }
+        public UserResponse? userInfo1 { get; set; }
+        public UserResponse? userInfo2 { get; set; }
     }
 }

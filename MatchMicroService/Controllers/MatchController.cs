@@ -64,8 +64,7 @@ namespace MatchMicroService.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetUserMatchesMe()
         {
-            try
-            {
+            
                 IList<int> userIds = new List<int>();
                 IList<UserMatchResp2> respListUser = new List<UserMatchResp2>();
 
@@ -85,7 +84,30 @@ namespace MatchMicroService.Controllers
 
                 List<UserResponse> usersInfo = await _userApiServices.GetUsers(userIds);
 
-                foreach(var i in response)
+                if (usersInfo == null)
+                {
+                    foreach (var i in response)
+                    {
+                        UserMatchResp2 resp2 = new UserMatchResp2()
+                        {
+                            UserMatchId = i.UserMatchId,
+                            User1 = i.User1,
+                            User2 = i.User2,
+                            CreatedAt = i.CreatedAt,
+                            UpdatedAt = i.UpdatedAt,
+                            LikeUser2 = i.LikeUser2,
+                            LikeUser1 = i.LikeUser1,
+                            userInfo1 = null,
+                            userInfo2 = null
+                        };
+
+                        respListUser.Add(resp2);
+                    }
+
+                    return new JsonResult(new { Message = "Hubo un problema al conectarse con otras APIs", Response = respListUser }) { StatusCode = 502 };
+                }
+
+                foreach (var i in response)
                 {
                     UserMatchResp2 resp2 = new UserMatchResp2()
                     {
@@ -104,11 +126,7 @@ namespace MatchMicroService.Controllers
                 }
 
                 return new JsonResult(new { Count = respListUser.Count, Response = respListUser }) { StatusCode = 200 };
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(new { ex.Message }) { StatusCode = 500 };
-            }
+            
         }
 
         [HttpGet]
