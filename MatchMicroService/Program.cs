@@ -85,6 +85,7 @@ builder.Services.AddTransient<IUserMatchServices, UserMatchServices>();
 builder.Services.AddTransient<IDateCommands, DateCommands>();
 builder.Services.AddTransient<IDateQueries, DateQueries>();
 builder.Services.AddTransient<IDateServices, DateServices>();
+builder.Services.AddTransient<IDateValidations, DateValidations>();
 
 builder.Services.AddTransient<IUserApiServices, UserApiServices>();
 

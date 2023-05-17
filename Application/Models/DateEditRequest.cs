@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.Models
 {
-    public class DateRequest2
+    public class DateEditRequest
     {
-        public int MatchId { get; set; }
-        public string Location { get; set; }
-        public string Description { get; set; }
+        public int DateId { get; set; }
         public int State { get; set; } // 3 Estados, 0 -> esperando confirmacion; 1 -> aceptado; -1 -> rechazado.
     }
 }
