@@ -7,6 +7,7 @@ using Application.Models;
 using Domain.Entities;
 using Application.UseCases;
 using System.Collections.Generic;
+using Presentation.Authorization;
 
 namespace MatchMicroService.Controllers
 {
@@ -18,13 +19,15 @@ namespace MatchMicroService.Controllers
         private readonly IMatchServices _matchServices;
         private readonly IUserMatchServices _userMatchServices;
         private readonly IUserApiServices _userApiServices;
+        private readonly IConfiguration _configuration;
 
-        public MatchController(ITokenServices tokenServices, IMatchServices matchServices, IUserMatchServices userMatchServices, IUserApiServices userApiServices)
+        public MatchController(ITokenServices tokenServices, IMatchServices matchServices, IUserMatchServices userMatchServices, IUserApiServices userApiServices, IConfiguration configuration)
         {
             _tokenServices = tokenServices;
             _matchServices = matchServices;
             _userMatchServices = userMatchServices;
             _userApiServices = userApiServices;
+            _configuration = configuration;
         }
 
         [HttpGet("{id}")]
@@ -130,10 +133,19 @@ namespace MatchMicroService.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = ApiKeySchemeOptions.Scheme)]
         public async Task<IActionResult> GetMatches()
         {
             try
             {
+                var apikey = _configuration.GetSection("ApiKey").Get<string>();
+                var key = HttpContext.User.Identity.Name;
+
+                if (key != null && key != apikey)
+                {
+                    return new JsonResult(new { Message = "No se puede acceder. La Key es inválida" }) { StatusCode = 401 };
+                }
+
                 IList<MatchResponse> response = await _matchServices.GetAll();
                 return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
             }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
-using Azure;
+using Presentation.Authorization;
 
 namespace MatchMicroService.Controllers
 {
@@ -16,22 +16,24 @@ namespace MatchMicroService.Controllers
         private readonly ITokenServices _tokenServices;
         private readonly IMatchServices _matchServices;
         private readonly IUserMatchServices _userMatchServices;
+        private readonly IConfiguration _configuration;
 
-        public UserMatchController(ITokenServices tokenServices, IMatchServices matchServices, IUserMatchServices userMatchServices)
+        public UserMatchController(ITokenServices tokenServices, IMatchServices matchServices, IUserMatchServices userMatchServices, IConfiguration configuration)
         {
             _tokenServices = tokenServices;
             _matchServices = matchServices;
             _userMatchServices = userMatchServices;
+            _configuration = configuration;
         }
 
 
-       /* Comportamiento actual del endpoint
-        * 
-        * No hay dependencia con el micro de chat, se crea el match aunque halla problemas al crear el chat
-        * ChatID se muestra como -1 cuando no se crea
-        * Si hay problemas de conexion con el microservicios Chat tira un 502
-        *  
-        */
+        /* Comportamiento actual del endpoint
+         * 
+         * No hay dependencia con el micro de chat, se crea el match aunque halla problemas al crear el chat
+         * ChatID se muestra como -1 cuando no se crea
+         * Si hay problemas de conexion con el microservicios Chat tira un 502
+         *  
+         */
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -86,10 +88,21 @@ namespace MatchMicroService.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = ApiKeySchemeOptions.Scheme)]
         public async Task<IActionResult> GetUserMatches()
         {
             try
             {
+
+                var apikey = _configuration.GetSection("ApiKey").Get<string>();
+                var key = HttpContext.User.Identity.Name;
+
+                if (key != null && key != apikey)
+                {
+                    return new JsonResult(new { Message = "No se puede acceder. La Key es inválida" }) { StatusCode = 401 };
+                }
+
+
                 IList<UserMatch> response = await _userMatchServices.GetAll();
                 return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
             }

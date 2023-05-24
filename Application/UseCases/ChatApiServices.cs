@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces;
 using Application.Models;
+using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace Application.UseCases
@@ -9,10 +11,12 @@ namespace Application.UseCases
     {
         private readonly HttpClient _httpClient;
         public string? _response;
+        private readonly string _apiKey;
 
-        public ChatApiServices(HttpClient httpClient)
+        public ChatApiServices(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _apiKey = configuration["ApiKey"];
         }
 
         public async Task<ChatResponse> CreateChat(int user1, int user2)
@@ -27,7 +31,7 @@ namespace Application.UseCases
                     UserId2 = user2
                 };
 
-
+                _httpClient.DefaultRequestHeaders.Add("X-API-KEY", _apiKey);
                 var response = await _httpClient.PostAsJsonAsync(url, req);
                 if (response != null && response.IsSuccessStatusCode)
                 {
