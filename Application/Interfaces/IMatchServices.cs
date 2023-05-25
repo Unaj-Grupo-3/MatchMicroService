@@ -11,6 +11,7 @@ namespace Application.Interfaces
         Task<IList<MatchResponse>> GetByUserId(int userId);
         Task<MatchResponse> GetByUsersIds(int userId1, int userId2);
         Task<IList<MatchResponse>> GetAll();
+        Task<bool> ExistMatch(int userId1, int userId2);
 
     }
 }

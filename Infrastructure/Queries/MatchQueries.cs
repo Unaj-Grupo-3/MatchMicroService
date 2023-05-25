@@ -15,6 +15,15 @@ namespace Infrastructure.Queries
             _context = context;
         }
 
+        public async Task<bool> Exist(int userId1, int userId2)
+        {
+            bool exist = await _context.Matches
+                .AnyAsync(el => 
+                                (el.User1Id == userId1 && el.User2Id == userId2) ||
+                                (el.User1Id == userId2 && el.User2Id == userId1));
+            return exist;
+        }
+
         public async Task<IList<MatchResponse>> GetAllMatch()
         {
             IList<MatchResponse> matches = await _context.Matches

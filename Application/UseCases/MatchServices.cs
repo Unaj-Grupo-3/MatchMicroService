@@ -136,5 +136,11 @@ namespace Application.UseCases
             IList<MatchResponse> matches = await _queries.GetAllMatch();
             return matches;
         }
+
+        public async Task<bool> ExistMatch(int userId1, int userId2)
+        {
+            bool exist = await _queries.Exist(userId1, userId2);
+            return exist;
+        }
     }
 }
