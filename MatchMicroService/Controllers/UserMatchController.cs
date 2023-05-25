@@ -41,6 +41,11 @@ namespace MatchMicroService.Controllers
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 int userId = _tokenServices.GetUserId(identity);
+                bool exist = await _matchServices.ExistMatch(userId, request.User2);
+                if (exist)
+                {
+                    return new JsonResult(new { Message = "No se puede modificar un match existente. " }) { StatusCode = 400 };
+                }
                 int like = request.Like ? 1 : -1;
                 var response = await _userMatchServices.AddOrUpdate(userId, request.User2, like);
 
