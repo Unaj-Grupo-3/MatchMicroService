@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
-using Application.UseCases;
-using System.Collections.Generic;
 using Presentation.Authorization;
 
 namespace MatchMicroService.Controllers
@@ -67,69 +65,71 @@ namespace MatchMicroService.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetUserMatchesMe()
         {
-            
-                IList<int> userIds = new List<int>();
-                IList<UserMatchResp2> respListUser = new List<UserMatchResp2>();
+            IList<int> userIds = new List<int>();
+            IList<UserMatchResp2> respListUser = new List<UserMatchResp2>();
 
-                var identity = HttpContext.User.Identity as ClaimsIdentity;
-                int userId = _tokenServices.GetUserId(identity);
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            int userId = _tokenServices.GetUserId(identity);
 
-                IList<UserMatch> response = await _userMatchServices.GetMatchesByUserId(userId);
-                
-                foreach (var match in response)
-                {
-                    if (!userIds.Contains(match.User2))
-                        userIds.Add(match.User2);
-                    
-                    if (!userIds.Contains(match.User1))
-                        userIds.Add(match.User1);
-                }
+            // De cara al otro sprint solamente deberia aparecer la info del otro usuario.
+            IList<UserMatch> response = await _userMatchServices.GetMatchesByUserId(userId);
 
-                List<UserResponse> usersInfo = await _userApiServices.GetUsers(userIds);
+            foreach (var match in response)
+            {
+                if (!userIds.Contains(match.User2))
+                    userIds.Add(match.User2);
 
-                if (usersInfo == null)
-                {
-                    foreach (var i in response)
-                    {
-                        UserMatchResp2 resp2 = new UserMatchResp2()
-                        {
-                            UserMatchId = i.UserMatchId,
-                            User1 = i.User1,
-                            User2 = i.User2,
-                            CreatedAt = i.CreatedAt,
-                            UpdatedAt = i.UpdatedAt,
-                            LikeUser2 = i.LikeUser2,
-                            LikeUser1 = i.LikeUser1,
-                            userInfo1 = null,
-                            userInfo2 = null
-                        };
+                if (!userIds.Contains(match.User1))
+                    userIds.Add(match.User1);
+            }
 
-                        respListUser.Add(resp2);
-                    }
+            if (userIds.Count == 0)
+            {
+                return new JsonResult(new { Count = respListUser.Count, Response = userIds }) { StatusCode = 200 };
+            }
 
-                    return new JsonResult(new { Message = "Hubo un problema al conectarse con otras APIs", Response = respListUser }) { StatusCode = 502 };
-                }
+            List<UserResponse> usersInfo = await _userApiServices.GetUsers(userIds);
 
+            if (usersInfo == null)
+            {
                 foreach (var i in response)
                 {
                     UserMatchResp2 resp2 = new UserMatchResp2()
                     {
                         UserMatchId = i.UserMatchId,
-                        User1 = i.User1,
-                        User2 = i.User2,
                         CreatedAt = i.CreatedAt,
                         UpdatedAt = i.UpdatedAt,
-                        LikeUser2 = i.LikeUser2,
-                        LikeUser1 = i.LikeUser1,
-                        userInfo1 = usersInfo.FirstOrDefault(u => u.UserId == i.User1),
-                        userInfo2 = usersInfo.FirstOrDefault(s => s.UserId == i.User2)
+                        userInfo = null,
                     };
 
                     respListUser.Add(resp2);
                 }
 
-                return new JsonResult(new { Count = respListUser.Count, Response = respListUser }) { StatusCode = 200 };
-            
+                return new JsonResult(new { Message = "Hubo un problema al conectarse con otras APIs", Response = respListUser }) { StatusCode = 502 };
+            }
+
+            foreach (var i in response)
+            {
+                UserMatchResp2 resp2 = new UserMatchResp2()
+                {
+                    UserMatchId = i.UserMatchId,
+                    CreatedAt = i.CreatedAt,
+                    UpdatedAt = i.UpdatedAt,
+                    userInfo = usersInfo.FirstOrDefault(s => s.UserId == (i.User1 == userId? i.User2 : i.User1) )
+                };
+
+                respListUser.Add(resp2);
+            }
+
+            UserMatchesFullResponse resposeMatches = new UserMatchesFullResponse()
+            {
+                UserMe = usersInfo.FirstOrDefault(x => x.UserId == userId),
+                Matches = respListUser
+            };
+
+            return new JsonResult(new { Count = respListUser.Count, Response = resposeMatches }) { StatusCode = 200 };
+
+
         }
 
         [HttpGet]
@@ -154,8 +154,6 @@ namespace MatchMicroService.Controllers
                 return new JsonResult(new { ex.Message }) { StatusCode = 500 };
             }
         }
-
-
     }
 }
 

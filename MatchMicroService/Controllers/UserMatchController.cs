@@ -98,7 +98,6 @@ namespace MatchMicroService.Controllers
         {
             try
             {
-
                 var apikey = _configuration.GetSection("ApiKey").Get<string>();
                 var key = HttpContext.User.Identity.Name;
 

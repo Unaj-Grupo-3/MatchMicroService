@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces;
 using Application.Models;
-using Azure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,7 +44,7 @@ namespace MatchMicroService.Controllers
             }
         }
 
-        [HttpGet("/me")]
+        [HttpGet("me")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetDatesMe()
         {

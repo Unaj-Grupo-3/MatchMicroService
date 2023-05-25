@@ -40,14 +40,13 @@ namespace Application.UseCases
                     JArray array = JArray.Parse(content);
                     foreach(var i in array)
                     {
-                        UserResponse userResp = new UserResponse();
                         UserResponse user = new UserResponse();
                         user.UserId = (int)i.SelectToken("userId");
                         user.Name = (string)i.SelectToken("name");
                         user.LastName = (string)i.SelectToken("lastName");
                         user.Images = (string)i.SelectToken("images");
 
-                        userList.Add(userResp);
+                        userList.Add(user);
                     }
 
                     return userList;

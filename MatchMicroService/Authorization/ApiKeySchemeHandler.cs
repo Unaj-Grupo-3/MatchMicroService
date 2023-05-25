@@ -1,11 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
-using Presentation.Authorization;
-using static Dropbox.Api.Files.SearchMatchType;
 
 namespace Presentation.Authorization;
 
