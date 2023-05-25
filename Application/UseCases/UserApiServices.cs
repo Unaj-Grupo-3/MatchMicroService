@@ -44,7 +44,7 @@ namespace Application.UseCases
                         user.UserId = (int)i.SelectToken("userId");
                         user.Name = (string)i.SelectToken("name");
                         user.LastName = (string)i.SelectToken("lastName");
-                        user.Images = (string)i.SelectToken("images");
+                        user.Images = (string)i.SelectToken("image");
 
                         userList.Add(user);
                     }
