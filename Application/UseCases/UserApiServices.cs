@@ -1,26 +1,21 @@
 ﻿using Application.Interfaces;
 using Application.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 
 namespace Application.UseCases
 {
     public class UserApiServices : IUserApiServices
     {
         private readonly HttpClient _httpClient;
+        private readonly string _apiKey;
         public string? _response;
 
-        public UserApiServices(HttpClient httpClient)
+        public UserApiServices(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _apiKey = configuration["ApiKey"];
         }
 
         //Traer foto, nombre y apellido
@@ -29,13 +24,14 @@ namespace Application.UseCases
             try
             {
                 List<UserResponse> userList = new List<UserResponse>();
-                var qParams = _httpClient.BaseAddress + "User/userByIds?usersId=" + userIds[0];
+                var qParams = _httpClient.BaseAddress + "User/false?usersId=" + userIds[0];
 
                 for (int i = 1; i<userIds.Count; i++)
                 {
                     qParams += "&usersId=" + userIds[i];
                 }
 
+                _httpClient.DefaultRequestHeaders.Add("X-API-KEY", _apiKey);
                 var response = await _httpClient.GetAsync(qParams);
 
                 if (response != null && response.IsSuccessStatusCode)
@@ -44,21 +40,13 @@ namespace Application.UseCases
                     JArray array = JArray.Parse(content);
                     foreach(var i in array)
                     {
-                        UserResponse userResp = new UserResponse();
-                        userResp.UserId = (int)i.SelectToken("userId");
-                        userResp.Name = (string)i.SelectToken("name");
-                        userResp.LastName = (string)i.SelectToken("lastName");
-                        JArray jArrays = (JArray)i.SelectToken("images");
-                        if (!jArrays.IsNullOrEmpty())
-                        {
-                            userResp.Images = jArrays[0].SelectToken("url").ToString();
-                        }
-                        else
-                        {
-                            userResp.Images = null;
-                        }
+                        UserResponse user = new UserResponse();
+                        user.UserId = (int)i.SelectToken("userId");
+                        user.Name = (string)i.SelectToken("name");
+                        user.LastName = (string)i.SelectToken("lastName");
+                        user.Images = (string)i.SelectToken("image");
 
-                        userList.Add(userResp);
+                        userList.Add(user);
                     }
 
                     return userList;
