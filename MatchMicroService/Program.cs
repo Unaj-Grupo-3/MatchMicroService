@@ -97,7 +97,9 @@ builder.Services.AddTransient<IDateQueries, DateQueries>();
 builder.Services.AddTransient<IDateServices, DateServices>();
 builder.Services.AddTransient<IDateValidations, DateValidations>();
 
-builder.Services.AddTransient<IUserApiServices, UserApiServices>();
+//builder.Services.AddTransient<IUserApiServices, UserApiServices>();
+
+//builder.Services.AddTransient<IChatApiServices, ChatApiServices>();
 
 builder.Services.AddHttpClient<IChatApiServices, ChatApiServices>(options =>
 {
@@ -107,7 +109,7 @@ builder.Services.AddHttpClient<IChatApiServices, ChatApiServices>(options =>
 builder.Services.AddHttpClient<IUserApiServices, UserApiServices>(options =>
 {
     options.BaseAddress = new Uri("https://localhost:7020/api/v1/");
-});
+}); 
 
 var app = builder.Build();
 
