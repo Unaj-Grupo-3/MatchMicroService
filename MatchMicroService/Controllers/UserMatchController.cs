@@ -115,6 +115,30 @@ namespace MatchMicroService.Controllers
                 return new JsonResult(new { ex.Message }) { StatusCode = 500 };
             }
         }
+
+        [HttpGet("Worker")]
+        [Authorize(AuthenticationSchemes = ApiKeySchemeOptions.Scheme)]
+        public async Task<IActionResult> GetUserMatchesWorker()
+        {
+            try
+            {
+                var apikey = _configuration.GetSection("ApiKey").Get<string>();
+                var key = HttpContext.User.Identity.Name;
+
+                if (key != null && key != apikey)
+                {
+                    return new JsonResult(new { Message = "No se puede acceder. La Key es inválida" }) { StatusCode = 401 };
+                }
+
+
+                IList<UserMatch> response = await _userMatchServices.GetAllWorker();
+                return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { ex.Message }) { StatusCode = 500 };
+            }
+        }
     }
 }
 

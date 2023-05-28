@@ -21,6 +21,12 @@ namespace Infrastructure.Queries
                 .ToListAsync();
             return matches;
         }
+
+        public async Task<IList<UserMatch>> GetWorkerAllMatch()
+        {
+            IList<UserMatch> matches = await _context.UserMatches.ToListAsync();
+            return matches;
+        }
         public async Task<IList<UserMatch>> GetMatchByUserId(int userId)
         {
             IList<UserMatch> matches = await _context.UserMatches
