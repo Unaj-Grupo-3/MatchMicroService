@@ -62,6 +62,29 @@ namespace MatchMicroService.Controllers
             }
         }
 
+        [HttpGet("{matchId}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetDatesByMatchId(int matchId)
+        {
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                int userId = _tokenServices.GetUserId(identity);
+
+                IList<DateResponse> response = await _services.GetDatesByMatchId(matchId);
+
+                if(response.Count > 0)
+                {
+                    return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
+                }
+                return new JsonResult(new { Count = response.Count, Message= "No existen citas para el match solicitado." }) { StatusCode = 200 };
+            }   
+            catch (Exception ex)
+            {
+                return new JsonResult(new { ex.Message }) { StatusCode = 500 };
+            }
+        }
+
         [HttpPut]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> ChangeStateByUser2(DateEditRequest req)

@@ -99,11 +99,12 @@ namespace Application.UseCases
 
             foreach (Match match in matches)
             {
+                // Se pone al UserId buscado siempre en el User1 para simplificar busquedas.
                 MatchResponse response = new MatchResponse()
                 {
                     Id = match.MatchId,
-                    User1 = match.User1Id,
-                    User2 = match.User2Id,
+                    User1 = userId == match.User1Id ? match.User1Id : match.User2Id,
+                    User2 = userId != match.User2Id ? match.User2Id : match.User1Id,
                 };
 
                 matchResponses.Add(response);

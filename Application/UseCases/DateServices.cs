@@ -42,6 +42,13 @@ namespace Application.UseCases
             return dates;
         }
 
+        public async Task<IList<DateResponse>> GetDatesByMatchId(int matchId)
+        {
+            // Devuelve la listta de citas que planifico con ese usuario matcheado.
+            var response = await _queries.GetDatesByMatchId(matchId);
+            return response;
+        }
+
         public async Task<DateResponse> EditDate(DateEditRequest req)
         {
             var date = await _commands.AlterDate(req);

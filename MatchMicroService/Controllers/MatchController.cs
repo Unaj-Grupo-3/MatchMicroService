@@ -74,6 +74,8 @@ namespace MatchMicroService.Controllers
             // De cara al otro sprint solamente deberia aparecer la info del otro usuario.
             IList<UserMatch> response = await _userMatchServices.GetMatchesByUserId(userId);
 
+            var matchUser = await _matchServices.GetByUserId(userId);
+
             foreach (var match in response)
             {
                 if (!userIds.Contains(match.User2))
@@ -90,6 +92,7 @@ namespace MatchMicroService.Controllers
 
             List<UserResponse> usersInfo = await _userApiServices.GetUsers(userIds);
 
+            // Devuelve los match pero sin la info de los usuarios matcheados.
             if (usersInfo == null)
             {
                 foreach (var i in response)
@@ -97,6 +100,7 @@ namespace MatchMicroService.Controllers
                     UserMatchResp2 resp2 = new UserMatchResp2()
                     {
                         UserMatchId = i.UserMatchId,
+                        MatchId = matchUser.FirstOrDefault(x => x.User2 == i.User2 || x.User2 == i.User1).Id,
                         CreatedAt = i.CreatedAt,
                         UpdatedAt = i.UpdatedAt,
                         userInfo = null,
@@ -113,6 +117,7 @@ namespace MatchMicroService.Controllers
                 UserMatchResp2 resp2 = new UserMatchResp2()
                 {
                     UserMatchId = i.UserMatchId,
+                    MatchId= matchUser.FirstOrDefault(x => x.User2 == i.User2 || x.User2 == i.User1).Id,
                     CreatedAt = i.CreatedAt,
                     UpdatedAt = i.UpdatedAt,
                     userInfo = usersInfo.FirstOrDefault(s => s.UserId == (i.User1 == userId? i.User2 : i.User1) )
@@ -154,6 +159,7 @@ namespace MatchMicroService.Controllers
                 return new JsonResult(new { ex.Message }) { StatusCode = 500 };
             }
         }
+
     }
 }
 
