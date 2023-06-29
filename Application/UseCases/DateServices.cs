@@ -57,14 +57,14 @@ namespace Application.UseCases
         public async Task<IList<DatesDetailsResponse>> GetDatesDetails(int userId)
         {
             List<DatesDetailsResponse> response = new List<DatesDetailsResponse>();
-            IList<DateResponse> dates=  await _queries.GetDatesByUserId(userId); // Citas del usuario buscado
-            List<int> usersForAPI = new List<int>(); 
-            foreach(DateResponse item in dates)
+            IList<DateResponse> dates = await _queries.GetDatesByUserId(userId); // Citas del usuario buscado
+            List<int> usersForAPI = new List<int>();
+            foreach (DateResponse item in dates)
             {
                 var user1 = item.Match.User1;
                 var user2 = item.Match.User2;
 
-                if(!usersForAPI.Contains(user1))
+                if (!usersForAPI.Contains(user1))
                 {
                     usersForAPI.Add(user1);
                 }
@@ -81,11 +81,11 @@ namespace Application.UseCases
                 int proposedUser_Id = item.Match.User1 == item.ProposedUserId ? item.Match.User1 : item.Match.User2;
                 int receivingUser_Id = item.Match.User2 != item.ProposedUserId ? item.Match.User2 : item.Match.User1;
 
-                var proposedUser = usersDetails.FirstOrDefault(f=> f.UserId == proposedUser_Id);
+                var proposedUser = usersDetails.FirstOrDefault(f => f.UserId == proposedUser_Id);
                 var receivingUser = usersDetails.FirstOrDefault(f => f.UserId == receivingUser_Id);
-                var latitudeDate = Convert.ToDouble(item.Location.Split(';')[0].Replace('.',','));
+                var latitudeDate = Convert.ToDouble(item.Location.Split(';')[0].Replace('.', ','));
                 var longitudeDate = Convert.ToDouble(item.Location.Split(';')[1].Replace('.', ','));
-                
+
                 DatesDetailsResponse obj = new DatesDetailsResponse()
                 {
                     DateId = item.DateId,
@@ -102,7 +102,7 @@ namespace Application.UseCases
                         Name = proposedUser.Name,
                         LastName = proposedUser.LastName,
                         Age = DateTime.Today.AddTicks(-proposedUser.Birthday.Ticks).Year - 1,
-                        Images = proposedUser.Images.Count.Equals(0) ? null :  proposedUser.Images[0].Url
+                        Images = proposedUser.Images.Count.Equals(0) ? null : proposedUser.Images[0].Url
                     },
                     User2 = new UserResponse2()
                     {
@@ -117,7 +117,9 @@ namespace Application.UseCases
 
                 response.Add(obj);
             }
-            return response;
+
+            // ordenamos la lista por fecha mas proxima de cita
+            return response.OrderByDescending(o => o.Time).ToList();
         }
 
         public async Task<DateResponse> EditDate(DateEditRequest req)
