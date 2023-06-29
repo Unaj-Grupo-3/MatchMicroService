@@ -29,6 +29,7 @@ namespace Infrastructure.Persistence
                 entity.Property(d => d.DateId).ValueGeneratedOnAdd();
                 entity.Property(d => d.Description).HasMaxLength(255);
                 entity.Property(d => d.State).HasDefaultValue(0);
+                entity.Property(d => d.ProposedUserId).IsRequired();
 
                 entity.HasOne<Match>(e => e.Match)
                       .WithMany(e => e.Date)
