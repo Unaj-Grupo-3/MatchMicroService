@@ -32,7 +32,7 @@ namespace MatchMicroService.Controllers
             int userId = _tokenServices.GetUserId(identity);
 
             var match = await _matchServices.GetById(req.MatchId);
-            if(match.User1 == userId)
+            if(match.User1 == userId || match.User2 == userId)
             {
                 var response = await _services.CreateDate(req);
 

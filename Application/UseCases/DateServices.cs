@@ -27,7 +27,7 @@ namespace Application.UseCases
                 MatchId = req.MatchId,
                 Location = req.Location,
                 Description = req.Description,
-                Time = DateTime.Now,
+                Time = req.Time,
                 ProposedUserId = req.ProposedUserId,
                 State = 0
             };
