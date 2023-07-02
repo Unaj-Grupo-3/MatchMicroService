@@ -40,6 +40,7 @@ namespace Infrastructure.Queries
                          User2 = d.Match.User2Id,
                      },
                      State = d.State,
+                     ProposedUserId= d.ProposedUserId,
                      Time = d.Time,
 
                 })
@@ -64,6 +65,7 @@ namespace Infrastructure.Queries
                                                         User2 = d.Match.User2Id,
                                                     },
                                                     State = d.State,
+                                                    ProposedUserId = d.ProposedUserId,
                                                     Time = d.Time
                                                 }).ToListAsync();
 

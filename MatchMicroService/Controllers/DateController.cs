@@ -32,7 +32,7 @@ namespace MatchMicroService.Controllers
             int userId = _tokenServices.GetUserId(identity);
 
             var match = await _matchServices.GetById(req.MatchId);
-            if(match.User1 == userId)
+            if(match.User1 == userId || match.User2 == userId)
             {
                 var response = await _services.CreateDate(req);
 
@@ -54,6 +54,24 @@ namespace MatchMicroService.Controllers
                 int userId = _tokenServices.GetUserId(identity);
 
                 IList<DateResponse> response = await _services.GetDatesByUserId(userId);
+                return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { ex.Message }) { StatusCode = 500 };
+            }
+        }
+
+        [HttpGet("DateDetails")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetDatesDetailsMe()
+        {
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                int userId = _tokenServices.GetUserId(identity);
+
+                IList<DatesDetailsResponse> response = await _services.GetDatesDetails(userId);
                 return new JsonResult(new { Count = response.Count, Response = response }) { StatusCode = 200 };
             }
             catch (Exception ex)

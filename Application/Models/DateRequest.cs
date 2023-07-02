@@ -8,6 +8,7 @@ namespace Application.Models
         public string Location { get; set; }
         public string Description { get; set; }
         public DateTime Time { get; set; }
+        public int ProposedUserId { get; set; }
         public int State { get; set; } // 3 Estados, 0 -> esperando confirmacion; 1 -> aceptado; -1 -> rechazado.
     }
 }
