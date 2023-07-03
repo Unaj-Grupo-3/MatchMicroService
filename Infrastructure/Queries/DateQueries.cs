@@ -44,7 +44,7 @@ namespace Infrastructure.Queries
                      Time = d.Time,
 
                 })
-                .ToListAsync();
+                .OrderBy(o => o.Time).ToListAsync();
             return matches;
         }
 
