@@ -25,6 +25,8 @@ namespace Application.UseCases
                 User1Id = request.User1,
                 User2Id = request.User2,
                 CreatedAt = DateTime.UtcNow,
+                View1 = false,
+                View2 = false
             };
 
             Match create = await _commands.CreateMatch(match);
@@ -105,6 +107,8 @@ namespace Application.UseCases
                     Id = match.MatchId,
                     User1 = userId == match.User1Id ? match.User1Id : match.User2Id,
                     User2 = userId != match.User2Id ? match.User2Id : match.User1Id,
+                    View1 = match.View1,
+                    View2 = match.View2
                 };
 
                 matchResponses.Add(response);
@@ -128,6 +132,8 @@ namespace Application.UseCases
                 Id = match.MatchId,
                 User1 = match.User1Id,
                 User2 = match.User2Id,
+                View1 = match.View1,
+                View2 = match.View2
             };
 
             return response;
@@ -142,6 +148,30 @@ namespace Application.UseCases
         {
             bool exist = await _queries.Exist(userId1, userId2);
             return exist;
+        }
+
+        public async Task<bool> UpdateMatch(MatchRequestUpdate request)
+        {
+            try
+            {
+                Match match = new Match()
+                {
+                    User1Id = request.User1,
+                    User2Id = request.User2,
+                    CreatedAt = DateTime.UtcNow,
+                    View1 = request.View1,
+                    View2 = request.View2
+                };
+
+                Match update = await _commands.UpdateMatch(match);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            
         }
     }
 }

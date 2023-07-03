@@ -6,6 +6,9 @@ using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
 using Presentation.Authorization;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Azure.Core;
+using Azure;
 
 namespace MatchMicroService.Controllers
 {
@@ -101,9 +104,13 @@ namespace MatchMicroService.Controllers
                     {
                         UserMatchId = i.UserMatchId,
                         MatchId = matchUser.FirstOrDefault(x => x.User2 == i.User2 || x.User2 == i.User1).Id,
+                        User1 = i.User1,
+                        User2 = i.User2,
                         CreatedAt = i.CreatedAt,
                         UpdatedAt = i.UpdatedAt,
                         userInfo = null,
+                        View1 = matchUser.FirstOrDefault(x => x.Id == matchUser.FirstOrDefault(x => x.User2 == i.User2 || x.User2 == i.User1).Id).View1,
+                        View2 = matchUser.FirstOrDefault(x => x.Id == matchUser.FirstOrDefault(x => x.User2 == i.User2 || x.User2 == i.User1).Id).View2
                     };
 
                     respListUser.Add(resp2);
@@ -118,9 +125,13 @@ namespace MatchMicroService.Controllers
                 {
                     UserMatchId = i.UserMatchId,
                     MatchId= matchUser.FirstOrDefault(x => x.User2 == i.User2 || x.User2 == i.User1).Id,
+                    User1 = i.User1,
+                    User2 = i.User2,
                     CreatedAt = i.CreatedAt,
                     UpdatedAt = i.UpdatedAt,
-                    userInfo = usersInfo.FirstOrDefault(s => s.UserId == (i.User1 == userId? i.User2 : i.User1) )
+                    userInfo = usersInfo.FirstOrDefault(s => s.UserId == (i.User1 == userId? i.User2 : i.User1) ),
+                    View1 = matchUser.FirstOrDefault(x => x.Id == matchUser.FirstOrDefault(x => x.User2 == i.User2 || x.User2 == i.User1).Id).View1,
+                    View2 = matchUser.FirstOrDefault(x => x.Id == matchUser.FirstOrDefault(x => x.User2 == i.User2 || x.User2 == i.User1).Id).View2
                 };
 
                 respListUser.Add(resp2);
@@ -158,6 +169,36 @@ namespace MatchMicroService.Controllers
             {
                 return new JsonResult(new { ex.Message }) { StatusCode = 500 };
             }
+        }
+
+        [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> UpdateMatch(MatchRequest request)
+        {
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                int userId = _tokenServices.GetUserId(identity);
+
+                MatchResponse matchUpdate = await _matchServices.GetByUsersIds(userId, request.User2);
+
+                var response = await _matchServices.UpdateMatch(new MatchRequestUpdate
+                {
+                    User1 = matchUpdate.User1,
+                    User2 = matchUpdate.User2,
+                    View1 = matchUpdate.User1 == userId? true: matchUpdate.View1,
+                    View2 = matchUpdate.User2 == userId ? true : matchUpdate.View2,
+                });
+
+                //var response = _matchServices.UpdateMatch(matchUpdate);
+                return new JsonResult(new { Response = response }) { StatusCode = 200 };
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { ex.Message }) { StatusCode = 500 };
+            }
+            
+         
         }
 
     }
