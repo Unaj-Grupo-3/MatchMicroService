@@ -21,7 +21,7 @@ namespace Application.UseCases
                 return true;
             }
 
-            catch (ArgumentException)
+            catch (Exception)
             {
                 return false;
             }
