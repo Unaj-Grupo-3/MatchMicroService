@@ -1,4 +1,8 @@
+using Application.Interfaces;
 using Application.UseCases;
+using Domain.Entities;
+using FluentAssertions;
+using Moq;
 using System.Security.Claims;
 
 namespace ProyectoDePruebasXUnit
@@ -6,20 +10,22 @@ namespace ProyectoDePruebasXUnit
     public class UnitTestUserMatchServices
     {
         [Fact]
-        public void Test1()
+        public async void Test1()
         {
             //ARRANGE
-            UserMatchServices userMatchServices = new();
-            TokenServices services = new();
-            var claims = new List<Claim> { new Claim("UserId", "1") };
-            var identity = new ClaimsIdentity(claims, "Bearer");
+            //UserMatchServices(IUserMatchCommands commands, IUserMatchQueries queries)
+            var mockCommands = new Mock<IUserMatchCommands>();
+            var mockQueries = new Mock<IUserMatchQueries>(); //mock de dependencia
+            UserMatchServices userMatchServices = new(mockCommands.Object, mockQueries.Object);
 
-            int userId = 1;
-            bool resultExpected = true;
+            IList<UserMatch> resultExpected = new List<UserMatch>();
+            mockQueries.Setup(query => query.GetAllMatch()).Returns(Task.FromResult(resultExpected));
 
             //ACT
+            var result = await userMatchServices.GetAll();
 
             //ASSERT
+            result.GetType().Should().Be(resultExpected.GetType());
 
         }
     }
