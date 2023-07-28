@@ -60,6 +60,7 @@ namespace ProyectoDePruebasXUnit
 
             //ASSERT //Func<object?> testCode
             //Assert.Throws<NullReferenceException>(() => services.ValidateUserId(identity, userId));
+            //no espera una exception, return false;
         }
 
         [Fact]
