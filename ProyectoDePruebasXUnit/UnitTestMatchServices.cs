@@ -4,6 +4,7 @@ using Application.UseCases;
 using Domain.Entities;
 using FluentAssertions;
 using Moq;
+using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
 
 namespace ProyectoDePruebasXUnit
@@ -218,9 +219,9 @@ namespace ProyectoDePruebasXUnit
             result.Count.Equals(matchResponsesExpected.Count);
             for(int i = 0; i < result.Count; i++)
             {
+                result[i].Id.Should().Be(matchResponsesExpected[i].Id);
                 result[i].User1.Should().Be(matchResponsesExpected[i].User1);
                 result[i].User2.Should().Be(matchResponsesExpected[i].User2);
-                result[i].Id.Should().Be(matchResponsesExpected[i].Id);
             }
         }
 
@@ -248,6 +249,148 @@ namespace ProyectoDePruebasXUnit
             //ASSERT
             result.Count.Equals(matchResponsesExpected.Count);
 
+        }
+
+        [Fact]
+        public async void GetByUsersIdsTestIsNull() //
+        {
+            //ARRANGE
+            //mocks de dependencia
+            var mockCommands = new Mock<IMatchCommands>();
+            var mockQueries = new Mock<IMatchQueries>();
+            var mockChatApiServices = new Mock<IChatApiServices>();
+            MatchServices matchServices = new(mockCommands.Object, mockQueries.Object, mockChatApiServices.Object);
+
+            int userId1 = 1;
+            int userId2 = 2;
+
+            mockQueries.Setup(q => q.GetByUsersIds(It.IsAny<int>(), It.IsAny<int>())).Returns(Task.FromResult<Domain.Entities.Match>(null));
+
+            //ACT
+            var result = await matchServices.GetByUsersIds(userId1, userId2);
+
+            //ASSERT
+            result.Should().Be(null);
+        }
+
+        [Fact]
+        public async void GetByUsersIdsTest() //
+        {
+            //ARRANGE
+            //mocks de dependencia
+            var mockCommands = new Mock<IMatchCommands>();
+            var mockQueries = new Mock<IMatchQueries>();
+            var mockChatApiServices = new Mock<IChatApiServices>();
+            MatchServices matchServices = new(mockCommands.Object, mockQueries.Object, mockChatApiServices.Object);
+
+            int userId1 = 1;
+            int userId2 = 2;
+
+            Domain.Entities.Match match = new()
+            {
+                MatchId = 1,
+                User1Id = userId1,
+                User2Id = userId2,
+            };
+
+            mockQueries.Setup(q => q.GetByUsersIds(It.IsAny<int>(), It.IsAny<int>())).Returns(Task.FromResult<Domain.Entities.Match>(match));
+
+            MatchResponse matchResponseExpected = new()
+            {
+                Id = match.MatchId,
+                User1 = match.User1Id,
+                User2 = match.User2Id,
+            };
+
+            //ACT
+            var result = await matchServices.GetByUsersIds(userId1, userId2);
+
+            //ASSERT
+            result.Id.Should().Be(matchResponseExpected.Id);
+            result.User1.Should().Be(matchResponseExpected.User1);
+            result.User2.Should().Be(matchResponseExpected.User2);
+        }
+
+        [Fact]
+        public async void ExistMatchTestTrue() //
+        {
+            //ARRANGE
+            var mockCommands = new Mock<IMatchCommands>();
+            var mockQueries = new Mock<IMatchQueries>();
+            var mockChatApiServices = new Mock<IChatApiServices>();
+            MatchServices matchServices = new(mockCommands.Object, mockQueries.Object, mockChatApiServices.Object);
+
+            int userId1 = 1;
+            int userId2 = 2;
+
+            mockQueries.Setup(q => q.Exist(It.IsAny<int>(), It.IsAny<int>())).Returns(Task.FromResult(true));
+
+            //ACT
+            var result = await matchServices.ExistMatch(userId1, userId2);
+
+            //ASSERT
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public async void ExistMatchTestFalse() //
+        {
+            //ARRANGE
+            var mockCommands = new Mock<IMatchCommands>();
+            var mockQueries = new Mock<IMatchQueries>();
+            var mockChatApiServices = new Mock<IChatApiServices>();
+            MatchServices matchServices = new(mockCommands.Object, mockQueries.Object, mockChatApiServices.Object);
+
+            int userId1 = 1;
+            int userId2 = 2;
+
+            mockQueries.Setup(q => q.Exist(It.IsAny<int>(), It.IsAny<int>())).Returns(Task.FromResult(false));
+
+            //ACT
+            var result = await matchServices.ExistMatch(userId1, userId2);
+
+            //ASSERT
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public async void UpdateMatchTestTrue() //
+        {
+            //ARRANGE
+            var mockCommands = new Mock<IMatchCommands>();
+            var mockQueries = new Mock<IMatchQueries>();
+            var mockChatApiServices = new Mock<IChatApiServices>();
+            MatchServices matchServices = new(mockCommands.Object, mockQueries.Object, mockChatApiServices.Object);
+
+            MatchRequestUpdate matchRequestUpdate = new ();
+
+            mockCommands.Setup(q => q.UpdateMatch(It.IsAny<Domain.Entities.Match>())).Returns(Task.FromResult(new Domain.Entities.Match()));
+
+            //ACT
+            var result = await matchServices.UpdateMatch(matchRequestUpdate);
+
+            //ASSERT
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public async void UpdateMatchTestFalse() //
+        {
+            //ARRANGE
+            var mockCommands = new Mock<IMatchCommands>();
+            var mockQueries = new Mock<IMatchQueries>();
+            var mockChatApiServices = new Mock<IChatApiServices>();
+            MatchServices matchServices = new(mockCommands.Object, mockQueries.Object, mockChatApiServices.Object);
+
+            MatchRequestUpdate matchRequestUpdate = new();
+
+            mockCommands.Setup(q => q.UpdateMatch(It.IsAny<Domain.Entities.Match>())).ThrowsAsync(new Exception());
+
+            //ACT
+            var result = await matchServices.UpdateMatch(matchRequestUpdate);
+
+            //ASSERT
+            result.Should().BeFalse();
         }
     }
 }
