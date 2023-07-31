@@ -6,12 +6,12 @@ namespace ProyectoDePruebasXUnit
     public class UnitTestTokenService
     {
         [Fact]
-        public void Test1_ValidateUserIdTrue()
+        public void ValidateUserIdTrue()
         {
             //ARRANGE
             TokenServices services = new();
             var claims = new List<Claim> { new Claim("UserId", "1") };
-            var identity = new ClaimsIdentity(claims, "Bearer");
+            var identity = new ClaimsIdentity(claims);
 
             int userId = 1;
             bool resultExpected = true;
@@ -24,12 +24,12 @@ namespace ProyectoDePruebasXUnit
 
         }
         [Fact]
-        public void Test1_ValidateUserIdFalse()
+        public void ValidateUserIdFalse()
         {
             //ARRANGE
             TokenServices services = new();
             var claims = new List<Claim> { new Claim("UserId", "1") };
-            var identity = new ClaimsIdentity(claims, "Bearer");
+            var identity = new ClaimsIdentity(claims);
 
             int userId = 2;
             bool resultExpected = false;
@@ -41,7 +41,7 @@ namespace ProyectoDePruebasXUnit
             Assert.Equal(resultExpected, result);
         }
         [Fact]
-        public void Test1_ValidateUserIdException()
+        public void ValidateUserIdException()
         {
             //ARRANGE
             TokenServices services = new();
@@ -64,12 +64,12 @@ namespace ProyectoDePruebasXUnit
         }
 
         [Fact]
-        public void Test2_GetUserId()
+        public void GetUserId()
         {
             //ARRANGE
             TokenServices services = new();
-            var claims = new List<Claim> { new Claim("UserId", "1") };
-            var identity = new ClaimsIdentity(claims, "Bearer");
+            var claims = new List<Claim> { new Claim("UserId", "1") }; //type, value
+            var identity = new ClaimsIdentity(claims);
 
             int userIdExpected = 1;
 

@@ -10,7 +10,7 @@ namespace ProyectoDePruebasXUnit
     public class UnitTestUserMatchServices
     {
         [Fact]
-        public async void GetAllMatchReturnIListUserMatch()
+        public async void GetAllMatchTest()
         {
             //ARRANGE
             var mockCommands = new Mock<IUserMatchCommands>();
@@ -29,7 +29,7 @@ namespace ProyectoDePruebasXUnit
         //AddOrUpdateMethod --> UserMatchResponse
         //CASE 1: es la primer interaccion entre user 1 y user 2, agrego un registro a la bd user1, user2, ±1
         [Fact]
-        public async void AddOrUpdateMethodCase1()
+        public async void AddOrUpdateTestCase1()
         {
             //ARRANGE
             var mockCommands = new Mock<IUserMatchCommands>();
@@ -56,10 +56,10 @@ namespace ProyectoDePruebasXUnit
             result.User2.Should().Be(userId2);
             result.IsMatch.Should().BeFalse();
         }
-        //AddOrUpdateMethod --> UserMatchResponse
+        //AddOrUpdateTest --> UserMatchResponse
         //CASE 2: el user 1 fue visto por el user 2, lo agrego, hay un registro en la bd user2, user1, ±1
         [Fact]
-        public async void AddOrUpdateMethodCase2()
+        public async void AddOrUpdateTestCase2()
         {
             //ARRANGE
             var mockCommands = new Mock<IUserMatchCommands>();
@@ -93,10 +93,10 @@ namespace ProyectoDePruebasXUnit
             result.User2.Should().Be(userId1);
             result.IsMatch.Should().BeTrue();
         }
-        //AddOrUpdateMethod --> UserMatchResponse
+        //AddOrUpdateTest --> UserMatchResponse
         //CASE 3: el user 1 ya likeo al user2, hay que modificar el registro en la bd user1, user2, ±1
         [Fact]
-        public async void AddOrUpdateMethodCase3()
+        public async void AddOrUpdateTestCase3()
         {
             //ARRANGE
             var mockCommands = new Mock<IUserMatchCommands>();
@@ -130,6 +130,42 @@ namespace ProyectoDePruebasXUnit
             result.User1.Should().Be(userId1);
             result.User2.Should().Be(userId2);
             result.IsMatch.Should().BeFalse();
+        }
+
+        [Fact]
+        public async void GetAllWorkerTest()
+        {
+            //ARRANGE
+            var mockCommands = new Mock<IUserMatchCommands>();
+            var mockQueries = new Mock<IUserMatchQueries>(); //mock de dependencia
+            UserMatchServices userMatchServices = new(mockCommands.Object, mockQueries.Object);
+
+            IList<UserMatch> resultExpected = new List<UserMatch>();
+            mockQueries.Setup(query => query.GetWorkerAllMatch()).Returns(Task.FromResult(resultExpected));
+
+            //ACT
+            var result = await userMatchServices.GetAllWorker();
+
+            //ASSERT
+            result.GetType().Should().Be(resultExpected.GetType());
+        }
+
+        [Fact]
+        public async void GetMatchByUserIdTest()
+        {
+            //ARRANGE
+            var mockCommands = new Mock<IUserMatchCommands>();
+            var mockQueries = new Mock<IUserMatchQueries>(); //mock de dependencia
+            UserMatchServices userMatchServices = new(mockCommands.Object, mockQueries.Object);
+            int userId = 1;
+            IList<UserMatch> resultExpected = new List<UserMatch>();
+            mockQueries.Setup(query => query.GetMatchByUserId(userId)).Returns(Task.FromResult(resultExpected));
+
+            //ACT
+            var result = await userMatchServices.GetMatchesByUserId(userId);
+
+            //ASSERT
+            result.GetType().Should().Be(resultExpected.GetType());
         }
     }
 }
