@@ -4,6 +4,7 @@ using Application.UseCases;
 using Domain.Entities;
 using FluentAssertions;
 using Moq;
+using System.Text.RegularExpressions;
 
 namespace ProyectoDePruebasXUnit
 {
@@ -166,6 +167,87 @@ namespace ProyectoDePruebasXUnit
             result.User1.Should().Be(match.User1Id);
             result.User2.Should().Be(match.User2Id);
             //Assert.Equal(match.MatchId, result.Id);
+        }
+
+        [Fact]
+        public async void GetByUserIdTest() //if(match != null)
+        {
+            //ARRANGE
+            //mocks de dependencia
+            var mockCommands = new Mock<IMatchCommands>();
+            var mockQueries = new Mock<IMatchQueries>();
+            var mockChatApiServices = new Mock<IChatApiServices>();
+            MatchServices matchServices = new(mockCommands.Object, mockQueries.Object, mockChatApiServices.Object);
+
+            int userId = 1;
+
+            Domain.Entities.Match match1 = new()
+            {
+                MatchId = 1,
+                User1Id = userId,
+                User2Id = 2,
+            };
+            Domain.Entities.Match match2 = new()
+            {
+                MatchId = 2,
+                User1Id = 3,
+                User2Id = userId,
+            };
+            IList<Domain.Entities.Match> matches = new List<Domain.Entities.Match> { match1, match2 };
+
+            MatchResponse matchResponse1 = new()
+            {
+                Id = match1.MatchId,
+                User1 = match1.User1Id,
+                User2 = match1.User2Id,
+            };
+            MatchResponse matchResponse2 = new()
+            {
+                Id = match2.MatchId,
+                User1 = match2.User2Id,
+                User2 = match2.User1Id,
+            };
+            IList<MatchResponse> matchResponsesExpected = new List<MatchResponse>() { matchResponse1, matchResponse2 };
+
+            mockQueries.Setup(q => q.GetByUserId(It.IsAny<int>())).Returns(Task.FromResult(matches));
+
+            //ACT
+            var result = await matchServices.GetByUserId(userId);
+
+            //ASSERT
+            result.Count.Equals(matchResponsesExpected.Count);
+            for(int i = 0; i < result.Count; i++)
+            {
+                result[i].User1.Should().Be(matchResponsesExpected[i].User1);
+                result[i].User2.Should().Be(matchResponsesExpected[i].User2);
+                result[i].Id.Should().Be(matchResponsesExpected[i].Id);
+            }
+        }
+
+        [Fact]
+        public async void GetByUserIdZeroTest() //if(match.count ==0)
+        {
+            //ARRANGE
+            //mocks de dependencia
+            var mockCommands = new Mock<IMatchCommands>();
+            var mockQueries = new Mock<IMatchQueries>();
+            var mockChatApiServices = new Mock<IChatApiServices>();
+            MatchServices matchServices = new(mockCommands.Object, mockQueries.Object, mockChatApiServices.Object);
+
+            int userId = 1;
+
+            IList<Domain.Entities.Match> matches = new List<Domain.Entities.Match>();
+
+            IList<MatchResponse> matchResponsesExpected = new List<MatchResponse>();
+
+            mockQueries.Setup(q => q.GetByUserId(It.IsAny<int>())).Returns(Task.FromResult(matches));
+
+            //ACT
+            var result = await matchServices.GetByUserId(userId);
+
+            //ASSERT
+            result.Count.Equals(matchResponsesExpected.Count);
+
         }
     }
 }
