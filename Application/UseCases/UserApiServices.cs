@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 
 namespace Application.UseCases
@@ -18,7 +17,6 @@ namespace Application.UseCases
             _apiKey = configuration["ApiKey"];
         }
 
-        //Traer foto, nombre y apellido
         public async Task<List<UserResponse>> GetUsers(IList<int> userIds)
         {
             try

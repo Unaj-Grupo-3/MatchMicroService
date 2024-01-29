@@ -2,8 +2,6 @@
 using Application.Models;
 using Domain.Entities;
 using Application.Helpers;
-using Microsoft.IdentityModel.Abstractions;
-using System.Runtime.Intrinsics.X86;
 
 namespace Application.UseCases
 {

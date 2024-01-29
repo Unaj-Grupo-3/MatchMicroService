@@ -52,7 +52,6 @@ namespace Infrastructure.Queries
 
         public async Task<Match> GetByUsersIds(int userId1, int userId2)
         {
-            //Match match = await _context.Matches.FirstOrDefaultAsync(x => (x.User1Id == userId1 || x.User2Id == userId1) && (x.User1Id == userId2 || x.User2Id == userId2));
 
             Match match = await _context.Matches
                                         .Where(x => x.User1Id == userId1 || x.User2Id == userId1)
