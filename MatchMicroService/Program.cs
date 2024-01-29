@@ -97,9 +97,6 @@ builder.Services.AddTransient<IDateQueries, DateQueries>();
 builder.Services.AddTransient<IDateServices, DateServices>();
 builder.Services.AddTransient<IDateValidations, DateValidations>();
 
-//builder.Services.AddTransient<IUserApiServices, UserApiServices>();
-
-//builder.Services.AddTransient<IChatApiServices, ChatApiServices>();
 
 builder.Services.AddHttpClient<IChatApiServices, ChatApiServices>(options =>
 {

@@ -6,9 +6,6 @@ using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
 using Presentation.Authorization;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Azure.Core;
-using Azure;
 
 namespace MatchMicroService.Controllers
 {
