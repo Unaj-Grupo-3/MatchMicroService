@@ -2,7 +2,6 @@
 using Application.Models;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace Application.UseCases

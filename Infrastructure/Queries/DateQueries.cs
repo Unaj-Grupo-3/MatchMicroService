@@ -24,7 +24,7 @@ namespace Infrastructure.Queries
         }
 
         public async Task<IList<DateResponse>> GetDatesByUserId(int userId)
-        {//aun no probe
+        {
             IList<DateResponse> matches = await _context.Dates
                 .Include(date => date.Match)
                 .Where(x => x.Match.User1Id == userId || x.Match.User2Id == userId)
